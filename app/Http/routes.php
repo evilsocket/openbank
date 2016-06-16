@@ -13,10 +13,6 @@
 
 Route::auth();
 
-Route::get('/', [ 'middleware' => 'auth', 'uses' => 'HomeController@index' ] );
-
-Route::get('/settings', [ 'middleware' => 'auth', 'uses' => 'HomeController@showSettings' ] );
-
 Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api', 'jvalidator']], function () {
   Route::get( '/me', 'Api\UserController@getUserProfile');
   Route::put( '/me', 'Api\UserController@setUserProfile');
@@ -24,3 +20,6 @@ Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api', 'jvalidator']]
   Route::put(    '/me/key/{key}/{label}/', 'Api\UserController@updateUserKey');
   Route::delete( '/me/key/{key}',          'Api\UserController@delUserKey');
 });
+
+Route::get('/', [ 'middleware' => 'auth', 'uses' => 'HomeController@index' ] );
+Route::get('/settings', [ 'middleware' => 'auth', 'uses' => 'HomeController@showSettings' ] );
