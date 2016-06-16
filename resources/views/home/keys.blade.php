@@ -7,14 +7,13 @@
     </span>
   </div>
 
-  <table class="table table-condensed table-hover">
+  <table class="table table-condensed table-hover" style="font-size:12px;">
     <thead>
       <tr>
-        <th>Updated At</th>
+        <th width="10%">Updated At</th>
         <th>Label</th>
-        <th>Key</th>
-        <th>Balance</th>
-        <th></th>
+        <th width="15%">Balance</th>
+        <th width="5%"></th>
       <tr>
     </thead>
     <tbody id="keys">

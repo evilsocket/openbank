@@ -98,7 +98,7 @@ function refreshKeysHandlers() {
 
       return false;
     });
-    
+
     $('#key_modal_title').html('Edit this Public Key');
     $('#key_label').val(label);
     $('#key_value').val(key);
@@ -118,8 +118,7 @@ function keysUpdate(data){
 
     var html = '<tr>' +
                 '<td><small>' + key['updated_at'] + '</small></td>' +
-                '<td><strong>' + key['label'] + '<strong></td>' +
-                '<td><small>' + key['value'] + '</small></td>' +
+                '<td>' + key['label'] + '</td>' +
                 '<td>' + money( key['balance'], 8, '฿' ) + '</td>' +
                 '<td>' +
                   '<a href="#" class="btn btn-xs btn-danger key_delete" data-key="' + key['value'] + '"><i class="fa fa-trash"></i></a>' +
