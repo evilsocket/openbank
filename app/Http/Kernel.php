@@ -15,7 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \App\http\Middleware\ApiValidatorMiddleware::class,
+        \App\Http\Middleware\ApiValidatorMiddleware::class,
     ];
 
     /**
