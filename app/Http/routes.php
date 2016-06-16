@@ -11,8 +11,6 @@
 |
 */
 
-Route::auth();
-
 Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api']], function () {
   Route::get( '/me', 'Api\UserController@getUserProfile');
   Route::put( '/me', 'Api\UserController@setUserProfile');
@@ -20,6 +18,8 @@ Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api']], function () 
   Route::put(    '/me/key/{key}/{label}/', 'Api\UserController@updateUserKey');
   Route::delete( '/me/key/{key}',          'Api\UserController@delUserKey');
 });
+
+Route::auth();
 
 Route::get('/', [ 'middleware' => 'auth', 'uses' => 'HomeController@index' ] );
 Route::get('/settings', [ 'middleware' => 'auth', 'uses' => 'HomeController@showSettings' ] );
