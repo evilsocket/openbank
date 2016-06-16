@@ -117,8 +117,8 @@ function keysUpdate(data){
     var key = keys[i];
 
     var html = '<tr>' +
-                '<td><small>' + key['updated_at'] + '</small></td>' +
-                '<td>' + key['label'] + '</td>' +
+                '<td>' + key['updated_at'] + '</td>' +
+                '<td><b>' + key['label'] + '</b></td>' +
                 '<td>' + money( key['balance'], 8, '฿' ) + '</td>' +
                 '<td>' +
                   '<a href="#" class="btn btn-xs btn-danger key_delete" data-key="' + key['value'] + '"><i class="fa fa-trash"></i></a>' +

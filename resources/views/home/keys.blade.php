@@ -10,10 +10,10 @@
   <table class="table table-condensed table-hover" style="font-size:12px;">
     <thead>
       <tr>
-        <th width="10%">Updated At</th>
-        <th>Label</th>
-        <th width="15%">Balance</th>
-        <th width="5%"></th>
+        <td width="10%"></td>
+        <td></td>
+        <td width="15%"></td>
+        <td width="5%"></td>
       <tr>
     </thead>
     <tbody id="keys">
