@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
           ->withoutOverlapping();
 
         $schedule->command('balanceupdate')
-          ->everyThirtyMinutes()
+          ->everyTenMinutes()
           ->withoutOverlapping();
     }
 }
