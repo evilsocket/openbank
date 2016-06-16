@@ -11,8 +11,6 @@
 |
 */
 
-Route::auth();
-
 Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api', 'jvalidator']], function () {
   Route::get( '/me', 'Api\UserController@getUserProfile');
   Route::put( '/me', 'Api\UserController@setUserProfile');
