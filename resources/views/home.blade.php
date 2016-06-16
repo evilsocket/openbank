@@ -4,7 +4,7 @@
   <script type="text/javascript">
     var api_token = '{{ $user->api_token }}';
   </script>
-  <script src="/js/home.js"></script>
+  <script src="/js/home.js?t=<?= time() ?>"></script>
   <script src="/js/jquery.timeago.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 @stop
