@@ -4,7 +4,7 @@
   <script type="text/javascript">
     var api_token = '{{ $user->api_token }}';
   </script>
-  <script src="/js/settings.js"></script>
+  <script src="/js/settings.js?t=<?= time() ?>"></script>
 @stop
 
 @section('content')
