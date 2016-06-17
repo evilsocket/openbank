@@ -1,0 +1,16 @@
+body {
+  font-family: 'Lato';
+}
+
+div.widget {
+  background-color: #ccc;
+  color: white;
+  border-radius: 4px;
+  padding: 15px;
+  margin: initial;
+  font-size: 2em;
+}
+
+div.widget-blue {
+  background-color: #337ab7;
+}
