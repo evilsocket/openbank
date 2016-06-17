@@ -7,7 +7,7 @@
     </span>
   </div>
 
-  <table class="table table-condensed table-hover" style="font-size:12px;">
+  <table class="table table-hover" style="font-size:12px;">
     <thead>
       <tr>
         <td width="10%"></td>
@@ -16,9 +16,7 @@
         <td width="5%"></td>
       <tr>
     </thead>
-    <tbody id="keys">
-
-    </tbody>
+    <tbody id="keys"></tbody>
   </table>
 
 </div>
