@@ -16,6 +16,13 @@
     <link rel="stylesheet" href="/css/app.css">
 
     <link rel="shortcut icon" href="/img/btc.png"/>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="/bower/Chart.js/Chart.js"></script>
+    <script src="/bower/angular-chart.js/dist/angular-chart.js"></script>
+    <link rel="stylesheet" href="/bower/angular-chart.js/dist/angular-chart.css">
+
+
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">

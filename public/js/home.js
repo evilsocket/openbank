@@ -29,42 +29,42 @@ function ajax( payload, onsuccess, path = '/api/v1/me', method = 'PUT' ){
   });
 }
 
-function btcUpdate(data){
-  var balance = data['status']['balance'];
-
-  $('#total_btc').html( money( balance['btc'], 8, '฿' ) );
-  $('#balance_ts').html( '<small>Updated ' + $.timeago( new Date( balance['ts'] * 1000 ) ) + '</small>' );
-}
-
-function balanceUpdate(data){
-  var balance = data['status']['balance'];
-  var currency = data['currency'];
-  var trends   = data['status']['price']['trends'];
-  var positive = trends['24h'] >= 0;
-
-  if( positive ){
-    $('#balance_panel').attr( 'class', 'panel panel-success' );
-    $('#total_fiat').attr('style', 'color: green');
-  }
-  else {
-    $('#balance_panel').attr( 'class', 'panel panel-danger' );
-    $('#total_fiat').attr('style', 'color: red');
-  }
-
-  $('#total_fiat').html( money( balance['fiat'], 2, currency['html'] ) );
-
-  $('#trends').html('');
-  $('<small>24 Hours : ' + trend(trends['24h']) + '</small>&nbsp;').appendTo('#trends');
-  $('<small style="margin-left: 10px;">1 Week : ' + trend(trends['1w']) + '</small>').appendTo('#trends');
-  $('<small style="margin-left: 10px;">1 Month : ' + trend(trends['1m']) + '</small>').appendTo('#trends');
-}
-
-function priceUpdate(data){
+function titleUpdate(data) {
+  var trend = data['status']['price']['trends']['24h'];
   var price = data['status']['price'];
   var currency = data['currency'];
 
-  $('#price').html( money( price['value'], 2, currency['html'] ) );
-  $('#price_ts').html( '<small>Updated ' + $.timeago( new Date( price['ts'] * 1000 ) ) + '</small>' );
+  if( trend != 0 ){
+    document.title = price['value'] + ' ' + currency['symbol'] + ' ( ' + ( trend > 0 ? '+' : '' ) + trend.toFixed(2) + '% )';
+  }
+  else {
+    document.title = price['value'] + ' ' + currency['symbol'];
+  }
+}
+
+function initialize() {
+  $('[data-toggle="tooltip"]').tooltip();
+
+  $('#key_save').click(function(){
+    var label   = $('#key_label').val();
+    var value   = $('#key_value').val();
+    var payload = {"keys":[{"label":label,"value":value}]};
+
+    ajax( payload, function(data){
+      $('#keymodal').modal('hide');
+      update();
+    });
+
+    return false;
+  });
+
+  $('#add_key').click(function(){
+    $('#key_modal_title').html('Add new Public Key');
+    $('#key_label').val('');
+    $('#key_value').val('');
+    $('#keymodal').modal('show');
+    return false;
+  });
 }
 
 function refreshKeysHandlers() {
@@ -108,115 +108,85 @@ function refreshKeysHandlers() {
   });
 }
 
-function keysUpdate(data){
-  var keys = data['keys'];
+var app = angular.module('OpenBank', ['chart.js'], function($interpolateProvider) {
+  $interpolateProvider.startSymbol('<%');
+  $interpolateProvider.endSymbol('%>');
+});
 
-  $('#keys').html('');
-
-  for( var i = 0; i < keys.length; i++ ){
-    var key = keys[i];
-
-    var html = '<tr>' +
-                '<td>' + key['updated_at'] + '</td>' +
-                '<td><b>' + key['label'] + '</b></td>' +
-                '<td>' + money( key['balance'], 8, '฿' ) + '</td>' +
-                '<td>' +
-                  '<a href="#" class="btn btn-xs btn-danger key_delete" data-key="' + key['value'] + '"><i class="fa fa-trash"></i></a>' +
-                  '&nbsp;' +
-                  '<a href="#" class="btn btn-xs btn-warning key_edit" data-label="' + key['label'] + '" data-key="' + key['value'] + '"><i class="fa fa-pencil-square-o"></i></a>' +
-                '</td>' +
-               '</tr>';
-
-    $(html).appendTo('#keys');
-  }
-
-  refreshKeysHandlers();
-}
-
-function chartUpdate(data) {
-  var history = data['history'];
-
-  $('#priceChart').html('');
-
-  var chart_data = [];
-  for( var i = 0; i < history.length; i++ ){
-    var ts = new Date( parseInt(history[i]['ts']) * 1000 );
-    var price = parseFloat(history[i]['price']);
-
-    chart_data.push([ts,price]);
-  }
-
-  var data = new google.visualization.DataTable();
-  data.addColumn('datetime', 'Time');
-  data.addColumn('number', 'Pice');
-  data.addRows(chart_data);
-
-  var options = {
-    pointSize: 5,
-    chartArea: {'width': '90%', 'height': '85%'}
+app.controller( 'DashboardController', function($scope, $sce) {
+  $scope.btc = {
+    total: 'Loading ...',
+    timestamp: '...'
   };
 
-  var chart = new google.visualization.LineChart(document.getElementById('priceChart'));
+  $scope.balance = {
+    total: 'Loading ...',
+    color: 'green',
+    class: 'panel panel-success',
+    trends: [
+      '...',
+      '...',
+      '...'
+    ]
+  };
 
-  chart.draw(data, options);
-}
+  $scope.price = {
+    current: 'Loading ...',
+    timestamp: '...'
+  };
 
-function titleUpdate(data) {
-  var trend = data['status']['price']['trends']['24h'];
-  var price = data['status']['price'];
-  var currency = data['currency'];
+  $scope.chart = {
+    data:   [[]],
+    labels: []
+  };
 
-  if( trend != 0 ){
-    document.title = price['value'] + ' ' + currency['symbol'] + ' ( ' + ( trend > 0 ? '+' : '' ) + trend.toFixed(2) + '% )';
-  }
-  else {
-    document.title = price['value'] + ' ' + currency['symbol'];
-  }
-}
+  $scope.keys = [{
+    created_at: 'Loading ...',
+    label: 'Loading ...',
+    balance: '...',
+    value: ''
+  }];
 
-function initialize() {
-  $('[data-toggle="tooltip"]').tooltip();
+  $scope.getData = function(){
+    console.log( 'Updating dashboard ...' );
 
-  $('#key_save').click(function(){
-    var label   = $('#key_label').val();
-    var value   = $('#key_value').val();
-    var payload = {"keys":[{"label":label,"value":value}]};
+    $.get( '/api/v1/me?api_token=' + api_token, function(data){
+      var balance  = data['status']['balance'];
+      var price    = data['status']['price'];
+      var currency = data['currency'];
+      var trends   = data['status']['price']['trends'];
+      var positive = trends['24h'] >= 0;
 
-    ajax( payload, function(data){
-      $('#keymodal').modal('hide');
-      update();
+      $scope.btc.total       = money( balance['btc'], 8, '฿' );
+      $scope.btc.timestamp   = $.timeago( new Date( balance['ts'] * 1000 ) );
+
+      $scope.balance.class   = positive ? 'panel panel-success' : 'panel panel-danger';
+      $scope.balance.color   = positive ? 'green' : 'red';
+      $scope.balance.total   = money( balance['fiat'], 2, currency['symbol'] );
+      $scope.balance.trends  = $.map( trends, function(value, index){ return $sce.trustAsHtml( trend(value) ); });
+
+      $scope.price.current   = money( price['value'], 2, currency['symbol'] );
+      $scope.price.timestamp = $.timeago( new Date( price['ts'] * 1000 ) );
+
+      $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
+
+      $scope.chart.labels = $.map( data['history'], function(value, index){
+        var d = new Date( value.ts * 1000 );
+        return $.timeago( d );
+      }).reverse();
+
+      $scope.keys = data['keys'];
+
+      $scope.$apply();
+
+      titleUpdate(data);
+      refreshKeysHandlers();
     });
+  };
 
-    return false;
-  });
-
-  $('#add_key').click(function(){
-    $('#key_modal_title').html('Add new Public Key');
-    $('#key_label').val('');
-    $('#key_value').val('');
-    $('#keymodal').modal('show');
-    return false;
-  });
-}
-
-function update(){
-  console.log( 'Updating dashboard ...' );
-
-  $.get( '/api/v1/me?api_token=' + api_token, function(data){
-    btcUpdate(data);
-    balanceUpdate(data);
-    priceUpdate(data);
-
-    chartUpdate(data);
-
-    keysUpdate(data);
-    titleUpdate(data);
-  });
-}
+  setInterval( $scope.getData, 1000 );
+});
 
 $(function(){
-  google.charts.load('current', {packages: ['corechart', 'line']});
   initialize();
-  update();
-  setInterval(function(){update();}, 1500);
 });

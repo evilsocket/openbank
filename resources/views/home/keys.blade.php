@@ -16,7 +16,22 @@
         <td width="5%"></td>
       <tr>
     </thead>
-    <tbody id="keys"></tbody>
+    <tbody id="keys">
+      <tr ng-repeat="key in keys">
+        <td ng-bind="key.updated_at"></td>
+        <td><b ng-bind="key.label"></b></td>
+        <td ng-bind="key.balance + ' ฿'"></td>
+        <td>
+          <a href="#" class="btn btn-xs btn-danger key_delete" data-key="<% key.value %>">
+            <i class="fa fa-trash"></i>
+          </a>
+          &nbsp;
+          <a href="#" class="btn btn-xs btn-warning key_edit" data-label="<% key.label %>" data-key="<% key.value %>">
+            <i class="fa fa-pencil-square-o"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
 </div>

@@ -4,14 +4,16 @@
   </div>
   <div class="panel-body" style="font-size:30px; text-align:center;">
     <center>
-      <span id="price">Loading ...</span>
+      <span ng-bind="price.current">Loading ...</span>
     </center>
   </div>
 
   <table class="table">
     <tr>
       <td>
-        <center><span id="price_ts">Loading ...</span></center>
+        <center>
+          <small>Updated <span ng-bind="price.timestamp"></span></small>
+        </center>
       </td>
     </tr>
   </table>

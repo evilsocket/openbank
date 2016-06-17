@@ -12,7 +12,7 @@
 @include('home.keymodal')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid" ng-app="OpenBank" ng-controller="DashboardController">
 
   <div class="row">
     <div class="col-md-4">

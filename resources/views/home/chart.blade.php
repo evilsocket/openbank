@@ -3,12 +3,7 @@
     <h3 class="panel-title">Price</h3>
   </div>
   <div class="panel-body">
-    <div id="priceChart" style="height: 400px; width: 100%; text-align: center;">
-      <span style="display: inline-block; vertical-align: middle; line-height: normal;">
-        <br/>
-        <br/>
-        Loading chart ...
-      </span>
-    </div>
+    <canvas class="chart chart-line" chart-data="chart.data" chart-labels="chart.labels" chart-legend="true" style="height: 400px; width: 100%; text-align: center;">
+    </canvas>
   </div>
 </div>
