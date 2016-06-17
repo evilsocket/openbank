@@ -134,7 +134,7 @@ class MeController extends Controller
 
       foreach( $keys as $key ){
         $key = (array)$key;
-        if( !isset($key['label']) || !isset($key['value']) || mb_strlen($key['label']) > 255 || mb_strlen($key['label']) < 1 || mb_strlen($key['value']) < 10 ){
+        if( !\App\Key::validate($key) ){
           Log::error( 'Invalid key label or value.' );
           return $this->error( 'Invalid request.', 422 );
         }

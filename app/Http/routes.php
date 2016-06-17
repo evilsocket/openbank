@@ -7,7 +7,10 @@ Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api']], function () 
   Route::put(    '/me/key/{key}/{label}/', 'Api\MeController@updateUserKey');
   Route::delete( '/me/key/{key}',          'Api\MeController@delUserKey');
 
-
+  // /api/v1/keys
+  Route::get(    '/keys',       'Api\KeysController@index' );
+  Route::post(   '/keys',       'Api\KeysController@create' );
+  Route::delete( '/keys/{key}', 'Api\KeysController@delete' );
 });
 
 Route::auth();
