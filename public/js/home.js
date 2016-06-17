@@ -160,7 +160,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
       var price    = data['status']['price'];
       var currency = data['currency'];
       var trends   = data['status']['price']['trends'];
-      var positive = trends['24h'] >= 0;
+      var positive = trends['1m'] >= 0;
 
       $scope.btc.total       = money( balance['btc'], 8, '฿' );
       $scope.btc.timestamp   = $.timeago( new Date( balance['ts'] * 1000 ) );
