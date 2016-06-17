@@ -152,38 +152,57 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     value: ''
   }];
 
-  $scope.getData = function(){
+  $scope.updateBTC = function(data) {
+    var balance  = data['status']['balance'];
+
+    $scope.btc.total     = money( balance['btc'], 8, '฿' );
+    $scope.btc.timestamp = $.timeago( new Date( balance['ts'] * 1000 ) );
+  };
+
+  $scope.updateBalance = function(data) {
+    var balance  = data['status']['balance'];
+    var trends   = data['status']['price']['trends'];
+    var currency = data['currency'];
+    var positive = trends['1m'] >= 0;
+
+    $scope.balance.class   = positive ? 'panel panel-success' : 'panel panel-danger';
+    $scope.balance.color   = positive ? 'green' : 'red';
+    $scope.balance.total   = money( balance['fiat'], 2, currency['symbol'] );
+    $scope.balance.trends  = $.map( trends, function(value, index){ return $sce.trustAsHtml( trend(value) ); });
+  };
+
+  $scope.updatePrice = function(data) {
+    var price    = data['status']['price'];
+    var currency = data['currency'];
+
+    $scope.price.current   = money( price['value'], 2, currency['symbol'] );
+    $scope.price.timestamp = $.timeago( new Date( price['ts'] * 1000 ) );
+  };
+
+  $scope.updateChart = function(data) {
+    $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
+    $scope.chart.labels = $.map( data['history'], function(value, index){
+      var date = new Date( value.ts * 1000 );
+      var fmt = $filter('date')( date, 'HH:mm' );
+
+      return ( index % 10 == 0 ? fmt : '' );
+    }).reverse();
+  };
+
+  $scope.updateVolumes = function(data) {
+    $scope.volumes.data   = [data['volumes']['data']];
+    $scope.volumes.labels = data['volumes']['labels'];
+  };
+
+  $scope.updateAll = function(){
     console.log( 'Updating dashboard ...' );
 
     $.get( '/api/v1/me?api_token=' + api_token, function(data){
-      var balance  = data['status']['balance'];
-      var price    = data['status']['price'];
-      var currency = data['currency'];
-      var trends   = data['status']['price']['trends'];
-      var positive = trends['1m'] >= 0;
-
-      $scope.btc.total       = money( balance['btc'], 8, '฿' );
-      $scope.btc.timestamp   = $.timeago( new Date( balance['ts'] * 1000 ) );
-
-      $scope.balance.class   = positive ? 'panel panel-success' : 'panel panel-danger';
-      $scope.balance.color   = positive ? 'green' : 'red';
-      $scope.balance.total   = money( balance['fiat'], 2, currency['symbol'] );
-      $scope.balance.trends  = $.map( trends, function(value, index){ return $sce.trustAsHtml( trend(value) ); });
-
-      $scope.price.current   = money( price['value'], 2, currency['symbol'] );
-      $scope.price.timestamp = $.timeago( new Date( price['ts'] * 1000 ) );
-
-      $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
-      $scope.chart.labels = $.map( data['history'], function(value, index){
-        var date = new Date( value.ts * 1000 );
-        var fmt = $filter('date')( date, 'HH:mm' );
-
-        return ( index % 10 == 0 ? fmt : '' );
-      }).reverse();
-
-      $scope.volumes.data   = [data['volumes']['data']];
-      $scope.volumes.labels = data['volumes']['labels'];
-
+      $scope.updateBTC(data);
+      $scope.updateBalance(data);
+      $scope.updatePrice(data);
+      $scope.updateChart(data);
+      $scope.updateVolumes(data);
       $scope.keys = data['keys'];
 
       $scope.$apply();
@@ -193,7 +212,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     });
   };
 
-  setInterval( $scope.getData, 1000 );
+  setInterval( $scope.updateAll, 1000 );
 });
 
 $(function(){
