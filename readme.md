@@ -8,7 +8,7 @@ All the data is collected in realtime.
 
 This is a screenshot of my instance running on a Raspberry Pi.
 
-![Screenshot](https://raw.githubusercontent.com/evilsocket/openbank/master/screenshot.png)
+![Screenshot](/screenshot.png?raw=true)
 
 ### Crontab
 
