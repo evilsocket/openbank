@@ -46,6 +46,6 @@ To install the needed cronjob:
 
 ### License
 
-This software is released under the GNU 3 license.
-Copyleft of Simone 'evilsocket' Margaritelli
+This software is released under the GNU 3 license.  
+Copyleft of Simone 'evilsocket' Margaritelli  
 https://www.evilsocket.net    
