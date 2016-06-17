@@ -1,14 +1,18 @@
 # OpenBank
 
-OpenBank is a Laravel based web application that you can use to keep track of your BitCoin public keys, their balances
-and so forth.
-All the data is collected in realtime.
+OpenBank is a Laravel based web application that you can use to keep track of your BitCoin public keys, your total balance and so forth.
+All the data is collected in realtime and will be shown to you on its web interface.
 
 ### Screenshot
 
 This is a screenshot of my instance running on a Raspberry Pi.
 
 ![Screenshot](/screenshot.png?raw=true)
+
+### Safe
+
+The database only stores the password you're using to access your OpenBank instance and your public keys, **no sensitive data will be leaked even if compromised**.
+Moreover if you install it on a Raspberry Pi running on your home network, you won't leak your ip address to a third entity.
 
 ### Crontab
 
