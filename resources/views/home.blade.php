@@ -16,11 +16,11 @@
 
   <div class="row">
     <div class="col-md-4">
-      @include('home.btc')
+      @include('home.balance')
     </div>
 
     <div class="col-md-4">
-      @include('home.balance')
+      @include('home.btc')
     </div>
 
     <div class="col-md-4">

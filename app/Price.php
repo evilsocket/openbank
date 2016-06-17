@@ -41,7 +41,7 @@ class Price extends Model
     return $results;
   }
 
-  public static function history( $currency = 'EUR', $limit = 100 ){
+  public static function history( $currency = 'EUR', $limit = 60 ){
     return Price::where('currency', '=', $currency)
                   ->orderBy('id', 'DESC')
                   ->limit($limit)
