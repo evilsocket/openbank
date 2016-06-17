@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 
-class UserController extends Controller
+class MeController extends Controller
 {
   protected function error( $message, $code ){
     $resp = array(
@@ -28,7 +28,7 @@ class UserController extends Controller
   }
 
   public function getUserProfile(){
-    $cache_key = 'UserController@getUserProfile('.$this->user->api_token.')';
+    $cache_key = 'MeController@getUserProfile('.$this->user->api_token.')';
     if( Cache::has($cache_key) ){
       return Cache::get($cache_key);
     }

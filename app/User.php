@@ -26,7 +26,7 @@ class User extends Authenticatable
     ];
 
     public function purgeCache() {
-      $cache_key = 'UserController@getUserProfile('.$this->api_token.')';
+      $cache_key = 'MeController@getUserProfile('.$this->api_token.')';
       Cache::forget($cache_key);
     }
 
