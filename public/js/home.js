@@ -6,10 +6,10 @@ function money( n, decimals, symbol ){
 
 function trend(v){
   if( v >= 0 ){
-    return '<span style="color:green">+' + v + '%</span>';
+    return '<span style="color:green">+' + v.toFixed(2) + '%</span>';
   }
   else {
-    return '<span style="color:red">' + v + '%</span>';
+    return '<span style="color:red">' + v.toFixed(2) + '%</span>';
   }
 }
 
@@ -113,7 +113,7 @@ var app = angular.module('OpenBank', ['chart.js'], function($interpolateProvider
   $interpolateProvider.endSymbol('%>');
 });
 
-app.controller( 'DashboardController', function($scope, $sce) {
+app.controller( 'DashboardController', function($scope, $sce, $filter) {
   $scope.btc = {
     total: 'Loading ...',
     timestamp: '...'
@@ -171,8 +171,10 @@ app.controller( 'DashboardController', function($scope, $sce) {
       $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
 
       $scope.chart.labels = $.map( data['history'], function(value, index){
-        var d = new Date( value.ts * 1000 );
-        return ( index % 10 == 0 ? d.toTimeString().split(' ')[0] : '' );
+        var date = new Date( value.ts * 1000 );
+        var fmt = $filter('date')( date, 'HH:mm' );
+
+        return ( index % 10 == 0 ? fmt : '' );
       }).reverse();
 
       $scope.keys = data['keys'];
