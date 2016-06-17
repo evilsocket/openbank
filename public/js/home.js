@@ -140,6 +140,11 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     labels: []
   };
 
+  $scope.volumes = {
+    data:   [[1]],
+    labels: ['Loading ...']
+  };
+
   $scope.keys = [{
     created_at: 'Loading ...',
     label: 'Loading ...',
@@ -169,13 +174,15 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
       $scope.price.timestamp = $.timeago( new Date( price['ts'] * 1000 ) );
 
       $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
-
       $scope.chart.labels = $.map( data['history'], function(value, index){
         var date = new Date( value.ts * 1000 );
         var fmt = $filter('date')( date, 'HH:mm' );
 
         return ( index % 10 == 0 ? fmt : '' );
       }).reverse();
+
+      $scope.volumes.data   = [data['volumes']['data']];
+      $scope.volumes.labels = data['volumes']['labels'];
 
       $scope.keys = data['keys'];
 

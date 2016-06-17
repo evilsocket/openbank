@@ -29,8 +29,12 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
       @include('home.chart')
+    </div>
+
+    <div class="col-md-4">
+      @include('home.volume')
     </div>
   </div>
 

@@ -78,8 +78,6 @@ class UpdateBalance extends Command
           $key->updated_at = time();
           $key->save();
         }
-
-        $user->purgeCache();
       }
 
       Log::info('Balance update job DONE.');

@@ -28,17 +28,13 @@ class MeController extends Controller
   }
 
   public function getUserProfile(){
-    $cache_key = 'MeController@getUserProfile('.$this->user->api_token.')';
-    if( Cache::has($cache_key) ){
-      return Cache::get($cache_key);
-    }
-
     $currency = \App\Currency::where( 'name', '=', $this->user->getSetting('currency') )->first();
     $keys     = $this->user->keys()->orderBy('balance', 'DESC')->orderBy('updated_at', 'DESC')->get();
     $settings = $this->user->settings()->get();
     $price    = \App\Price::current( $currency->name );
     $trends   = \App\Price::trends( $price );
     $history  = \App\Price::history( $currency->name );
+    $volumes  = \App\Price::volumes( $currency->name );
     $tmp      = array();
 
     foreach( $history as $p ){
@@ -79,13 +75,9 @@ class MeController extends Controller
       ],
       'settings' => $settings,
       'keys' => $keys,
-      'history' => $history
+      'history' => $history,
+      'volumes' => $volumes
     );
-
-    $cached = $data;
-    $cached['live'] = false;
-
-    Cache::add( $cache_key, $cached, 1 );
 
     return $data;
   }
@@ -145,8 +137,6 @@ class MeController extends Controller
         $this->user->addKey( $key['label'], $key['value'] );
       }
     }
-
-    $this->user->purgeCache();
 
     return $this->getUserProfile();
   }

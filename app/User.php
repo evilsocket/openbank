@@ -25,11 +25,6 @@ class User extends Authenticatable
         'id', 'password', 'remember_token', 'api_token'
     ];
 
-    public function purgeCache() {
-      $cache_key = 'MeController@getUserProfile('.$this->api_token.')';
-      Cache::forget($cache_key);
-    }
-
     public function createDefaultSettings() {
       foreach( UserSetting::getDefaults() as $name => $value ){
         $this->setSetting( $name, $value );
@@ -62,8 +57,6 @@ class User extends Authenticatable
           $record->save();
         }
       }
-
-      $this->purgeCache();
     }
 
     public function addKey( $label, $value ) {
@@ -81,15 +74,12 @@ class User extends Authenticatable
         $record->label = $label;
         $record->save();
       }
-
-      $this->purgeCache();
     }
 
     public function delKey( $value ){
       $record = Key::where( 'user_id', '=', $this->id )->where( 'value', '=', $value )->first();
       if( $record !== NULL ){
         $record->destroy($record->id);
-        $this->purgeCache();
         return TRUE;
       }
       return FALSE;
@@ -100,7 +90,6 @@ class User extends Authenticatable
       if( $record !== NULL ){
         $record->label = $label;
         $record->save();
-        $this->purgeCache();
         return TRUE;
       }
       return FALSE;

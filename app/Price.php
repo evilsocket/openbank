@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Price extends Model
 {
   protected $fillable = [
-    'currency', 'price'
+    'currency', 'price', 'markets'
   ];
 
   public static function current( $currency = 'USD' ){
@@ -34,7 +34,6 @@ class Price extends Model
                 ->where('updated_at', '<=', $date )
                 ->orderBy('updated_at', 'DESC')->first();
 
-
       $results[$label] = $prev === NULL ? 0.0 : ( ( $price->price - $prev->price ) / $prev->price ) * 100.0;
     }
 
@@ -46,5 +45,25 @@ class Price extends Model
                   ->orderBy('id', 'DESC')
                   ->limit($limit)
                   ->get();
+  }
+
+  public static function volumes( $currency = 'EUR' ){
+    $volumes = array(
+      'data' => array(),
+      'labels' => array()
+    );
+
+    $current = Price::where('currency', '=', $currency)
+                      ->orderBy('id', 'DESC')
+                      ->first();
+
+    $markets = json_decode( $current->markets, true );
+
+    foreach( $markets as $name => $m ) {
+      $volumes['labels'][] = $m['display_name'];
+      $volumes['data'][] = $m['volume_btc'];
+    }
+
+    return $volumes;
   }
 }
