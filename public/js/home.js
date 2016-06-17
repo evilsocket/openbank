@@ -172,7 +172,7 @@ app.controller( 'DashboardController', function($scope, $sce) {
 
       $scope.chart.labels = $.map( data['history'], function(value, index){
         var d = new Date( value.ts * 1000 );
-        return $.timeago( d );
+        return ( index % 10 == 0 ? $.timeago( d ): '' );
       }).reverse();
 
       $scope.keys = data['keys'];
