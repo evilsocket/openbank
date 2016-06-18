@@ -20,7 +20,7 @@
                       @foreach( \App\UserSetting::getValidNames() as $name )
 
                         <div class="form-group">
-                            <label for="{{ $name }}" class="col-md-4 control-label">{{ ucfirst($name) }}</label>
+                            <label for="{{ $name }}" class="col-md-4 control-label">{!! \App\UserSetting::getLabelFor( $name ) !!}</label>
                             <div class="col-md-6">
                               {!! \App\UserSetting::getHtmlFor( $user, $name ) !!}
                             </div>

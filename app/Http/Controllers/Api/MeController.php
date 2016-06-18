@@ -111,7 +111,7 @@ class MeController extends Controller
       // Check all settings first.
       foreach( $settings as $key => $value ){
         if( \App\UserSetting::isValid($key, $value) == FALSE ){
-          Log::error( 'Invalid setting name.' );
+          Log::error( "Invalid setting name '$key'." );
           return $this->error( 'Invalid request.', 422 );
         }
       }

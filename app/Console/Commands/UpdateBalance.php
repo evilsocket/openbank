@@ -8,13 +8,19 @@ use Cache;
 
 class UpdateBalance extends Command
 {
-    private function doPost($key){
+    private function doPost( $user, $key ){
+      $api_key = $user->getSetting('blockonomics_api_key');
       $data = array('addr' => $key);
       $opts = array('http' =>
           array(
               'method'  => 'POST',
               'header'  => "Content-Type: application/json\r\n" .
-                           "Accept: application/json\r\n",
+                           "Accept: application/json\r\n" .
+                           (
+                            $api_key ?
+                              "Authorization: Bearer $api_key\r\n" :
+                              ''
+                           ),
               'content' => @json_encode($data, true)
           )
       );
@@ -60,7 +66,7 @@ class UpdateBalance extends Command
         foreach( $keys as $key ){
           Log::info( "  Fetching balance for key '".$key->label."' ( ".$key->value." ) ..." );
 
-          $response = $this->doPost( $key->value );
+          $response = $this->doPost( $user, $key->value );
 
           if( !$response || !isset($response['response']) ){
             Log::error( "! Invalid response json." );
