@@ -203,7 +203,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   $scope.updateAll = function(){
     console.log( 'Updating dashboard ...' );
 
-    $.get( '/api/v1/me?api_token=' + api_token, function(data){
+    $.get( '/api/v1/me?r=' + new Date().getTime() + '&api_token=' + api_token, function(data){
       $scope.updateBTC(data);
       $scope.updateBalance(data);
       $scope.updatePrice(data);
