@@ -24,7 +24,15 @@ function ajax( payload, onsuccess, path = '/api/v1/me', method = 'PUT' ){
       success: onsuccess,
 
       error: function( xhr, status, error ) {
-        alert( "ERROR:\n\n" + xhr.responseJSON.errors.join("\n") );
+
+        $('#errors').html('');
+
+        for( var i = 0; i < xhr.responseJSON.errors.length; i++ ){
+          var err = xhr.responseJSON.errors[i];
+          $('<li>' + err + '</li>').appendTo('#errors');
+        }
+
+        $('#errormodal').modal('show');
       }
   });
 }

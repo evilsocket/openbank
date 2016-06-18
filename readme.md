@@ -14,6 +14,14 @@ This is a screenshot of my instance running on a Raspberry Pi.
 The database only stores the password you're using to access your OpenBank instance and your public keys, **no sensitive data will be leaked even if compromised**.
 Moreover if you install it on a Raspberry Pi running on your home network, you won't leak your ip address to a third entity.
 
+### How does it work
+
+All data is updated in realtime using two different API, one job will get the current price every minute using the [bitcoinaverage.com](https//bitcoinaverage.com/) API while your total balance is updated using the [blockonomics.co](https://www.blockonomics.co/) API.
+
+**IMPORTANT NOTE ABOUT XPUB**
+
+If you're adding an **xPub** key with more than 50 addresses bound to it, you'll need to get an API key from blockonomics and put it in your settings panel.
+
 ### Crontab
 
 To install the needed cronjob:

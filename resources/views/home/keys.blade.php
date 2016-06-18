@@ -1,37 +1,38 @@
-<div class="panel panel-default">
-
-  <div class="panel-heading">
-    Public Keys
-    <span style="float:right">
-      <a href="#" id="add_key" data-toggle="tooltip" data-placement="top" title="Add a new public key." class="btn btn-xs btn-success"><i class="fa fa-plus"></i></a>
-    </span>
-  </div>
-
-  <table class="table table-hover" style="font-size:12px;">
-    <thead>
-      <tr>
-        <td width="10%"></td>
-        <td></td>
-        <td width="15%"></td>
-        <td width="5%"></td>
-      <tr>
-    </thead>
-    <tbody id="keys">
-      <tr ng-repeat="key in keys">
-        <td ng-bind="key.updated_at"></td>
-        <td><b ng-bind="key.label"></b></td>
-        <td ng-bind="key.balance + ' ฿'"></td>
-        <td>
+<div class="row">
+  <div ng-repeat="key in keys" class="col-md-4">
+  <div class="panel panel-default key_edit" style="cursor: pointer;" data-label="<% key.label %>" data-key="<% key.value %>">
+      <div class="panel-heading">
+        <span ng-bind="key.label"></span>
+        <span style="float:right">
           <a href="#" class="btn btn-xs btn-danger key_delete" data-key="<% key.value %>">
             <i class="fa fa-trash"></i>
           </a>
-          &nbsp;
-          <a href="#" class="btn btn-xs btn-warning key_edit" data-label="<% key.label %>" data-key="<% key.value %>">
-            <i class="fa fa-pencil-square-o"></i>
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </span>
+      </div>
+      <div class="panel-body" style="font-size:30px; text-align:center;">
+        <center>
+          <span ng-bind="key.balance + ' ฿'">Loading ...</span>
+        </center>
+      </div>
+      <table class="table">
+        <tr>
+          <td>
+            <center>
+              <small style="color:#aaa">Last update <span ng-bind="key.updated_at"></span></small>
+            </center>
+          </td>
+        </tr>
+      </table>
+  </div>
+  </div>
 
+  <div class="col-md-4">
+  <div id="add_key" class="panel panel-default" style="padding: 33px; cursor: pointer; background-color:#5cb85c; border-color: #4cae4c; color:white">
+      <div class="panel-body" style="font-size:26px; text-align:center;">
+        <center>
+          <i class="fa fa-plus fa-2x"></i>
+        </center>
+      </div>
+  </div>
+  </div>
 </div>
