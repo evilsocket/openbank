@@ -47,10 +47,14 @@ class Price extends Model
                   ->get();
   }
 
-  public static function volumes( $currency = 'EUR' ){
-    $volumes = array(
-      'data' => array(),
-      'labels' => array()
+  public static function rates( $currency = 'EUR' ){
+    $rates = array(
+      'data' => array(
+        array(),
+        array()
+      ),
+      'labels' => array(),
+      'series' => array('Bid', 'Ask')
     );
 
     $current = Price::where('currency', '=', $currency)
@@ -60,10 +64,11 @@ class Price extends Model
     $markets = json_decode( $current->markets, true );
 
     foreach( $markets as $name => $m ) {
-      $volumes['labels'][] = $m['display_name'];
-      $volumes['data'][] = $m['volume_btc'];
+      $rates['labels'][] = $m['display_name'];
+      $rates['data'][0][] = $m['rates']['bid'];
+      $rates['data'][1][] = $m['rates']['ask'];
     }
 
-    return $volumes;
+    return $rates;
   }
 }

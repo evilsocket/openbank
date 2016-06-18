@@ -34,7 +34,7 @@
     </div>
 
     <div class="col-md-4">
-      @include('home.volume')
+      @include('home.rates')
     </div>
   </div>
 

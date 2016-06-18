@@ -34,7 +34,7 @@ class MeController extends Controller
     $price    = \App\Price::current( $currency->name );
     $trends   = \App\Price::trends( $price );
     $history  = \App\Price::history( $currency->name );
-    $volumes  = \App\Price::volumes( $currency->name );
+    $rates    = \App\Price::rates( $currency->name );
     $tmp      = array();
 
     foreach( $history as $p ){
@@ -76,7 +76,7 @@ class MeController extends Controller
       'settings' => $settings,
       'keys' => $keys,
       'history' => $history,
-      'volumes' => $volumes
+      'rates' => $rates
     );
 
     return $data;

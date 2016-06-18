@@ -114,6 +114,8 @@ var app = angular.module('OpenBank', ['chart.js'], function($interpolateProvider
 });
 
 app.controller( 'DashboardController', function($scope, $sce, $filter) {
+  $scope.currency = { };
+
   $scope.btc = {
     total: 'Loading ...',
     timestamp: '...'
@@ -140,9 +142,14 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     labels: []
   };
 
-  $scope.volumes = {
+  $scope.rates = {
     data:   [[1]],
-    labels: ['Loading ...']
+    labels: ['Loading ...'],
+    colours: [{
+      "fillColor": "green"
+    },{
+      "fillColor": "red"
+    }]
   };
 
   $scope.keys = [{
@@ -189,9 +196,8 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     }).reverse();
   };
 
-  $scope.updateVolumes = function(data) {
-    $scope.volumes.data   = [data['volumes']['data']];
-    $scope.volumes.labels = data['volumes']['labels'];
+  $scope.updateRates = function(data) {
+    $scope.rates = data['rates'];
   };
 
   $scope.updateAll = function(){
@@ -202,8 +208,10 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
       $scope.updateBalance(data);
       $scope.updatePrice(data);
       $scope.updateChart(data);
-      $scope.updateVolumes(data);
-      $scope.keys = data['keys'];
+      $scope.updateRates(data);
+
+      $scope.keys     = data['keys'];
+      $scope.currency = data['currency'];
 
       $scope.$apply();
 
