@@ -16,7 +16,6 @@ class UserSetting extends Model
 
   protected static $valid_names = [
     'currency',
-    'language',
     'blockonomics_api_key'
   ];
 
@@ -25,16 +24,11 @@ class UserSetting extends Model
       'EUR', 'USD'
     ],
 
-    'language' => [
-      'en', 'it'
-    ],
-
     'blockonomics_api_key' => [ ]
   ];
 
   protected static $defaults = [
     'currency'             => 'USD',
-    'language'             => 'en',
     'blockonomics_api_key' => ''
   ];
 
