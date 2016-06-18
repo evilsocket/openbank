@@ -12,11 +12,11 @@
     <tr>
       <td>
         <center>
-          <small>24 Hours : <span ng-bind-html="balance.trends[0]"></span></small>
+          <small style="color:#aaa">24 Hours : <span ng-bind-html="balance.trends[0]"></span></small>
           &nbsp;&nbsp;
-          <small>1 Week : <span ng-bind-html="balance.trends[1]"></span></small>
+          <small style="color:#aaa">1 Week : <span ng-bind-html="balance.trends[1]"></span></small>
           &nbsp;&nbsp;
-          <small>1 Month : <span ng-bind-html="balance.trends[2]"></span></small>
+          <small style="color:#aaa">1 Month : <span ng-bind-html="balance.trends[2]"></span></small>
         </center>
       </td>
     </tr>

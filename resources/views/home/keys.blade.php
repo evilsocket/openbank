@@ -18,7 +18,7 @@
         <tr>
           <td>
             <center>
-              <small style="color:#ccc">Last update <span ng-bind="key.updated_at"></span></small>
+              <small style="color:#aaa">Last update <span ng-bind="key.updated_at"></span></small>
             </center>
           </td>
         </tr>
