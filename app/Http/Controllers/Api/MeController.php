@@ -10,7 +10,7 @@ use Log;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Input;
 
 class MeController extends Controller
 {
@@ -29,11 +29,13 @@ class MeController extends Controller
 
   public function getUserProfile(){
     $now      = time();
+    $chart_type = Input::get( 'chart', 0 );
+    $chart_type = in_array( $chart_type, array( 0, 1, 2, 3 ) ) ? (int)$chart_type : 0;
     $currency = $this->user->getCurrency();
     $keys     = $this->user->getKeys();
     $price    = \App\Price::current( $currency->name );
     $trends   = \App\Price::trends( $price );
-    $history  = \App\Price::history( $currency->name );
+    $history  = \App\Price::history( $currency->name, $chart_type );
     $rates    = \App\Price::rates( $currency->name );
     $tmp      = array();
 

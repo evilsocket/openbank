@@ -1,3 +1,5 @@
+var chart_type = 0;
+
 function money( n, decimals, symbol ){
   var fn = parseFloat(n);
 
@@ -150,7 +152,19 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
 
   $scope.chart = {
     data:   [[]],
-    labels: []
+    labels: [],
+    names: [
+      '1 hour',
+      '24 hours',
+      '1 week',
+      '1 month'
+    ],
+    name: '1 hour',
+    setType: function(type) {
+      chart_type = type;
+      $scope.chart.name = $scope.chart.names[type];
+      $scope.updateAll();
+    }
   };
 
   $scope.rates = {
@@ -171,7 +185,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   }];
 
   $scope.money = money;
-  
+
   $scope.updateBTC = function(data) {
     var balance  = data['status']['balance'];
 
@@ -204,9 +218,24 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
     $scope.chart.labels = $.map( data['history'], function(value, index){
       var date = new Date( value.ts * 1000 );
-      var fmt = $filter('date')( date, 'HH:mm' );
 
-      return ( index % 10 == 0 ? fmt : '' );
+      if( chart_type == 0 ){
+        var fmt = $filter('date')( date, 'HH:mm' );
+        return ( index % 10 == 0 ? fmt : '' );
+      }
+      else if( chart_type == 1 ){
+        var fmt = $filter('date')( date, 'HH:mm' );
+        return ( index % 2 == 0 ? fmt : '' );
+      }
+      else if( chart_type == 2 ){
+        var fmt = $filter('date')( date, 'EEEE' );
+        return $filter('date')( date, 'EEEE' );
+      }
+      else if( chart_type == 3 ){
+        var fmt = $filter('date')( date, 'EEEE' );
+        return $filter('date')( date, 'dd MMM' );
+      }
+
     }).reverse();
   };
 
@@ -217,7 +246,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   $scope.updateAll = function(){
     console.log( 'Updating dashboard ...' );
 
-    $.get( '/api/v1/me?r=' + new Date().getTime() + '&api_token=' + api_token, function(data){
+    $.get( '/api/v1/me?r=' + new Date().getTime() + '&api_token=' + api_token + '&chart=' + chart_type, function(data){
       $scope.updateBTC(data);
       $scope.updateBalance(data);
       $scope.updatePrice(data);
