@@ -9,9 +9,11 @@
           </a>
         </span>
       </div>
-      <div class="panel-body" style="font-size:30px; text-align:center;">
+      <div class="panel-body" style="font-size:30px;">
         <center>
           <span ng-bind="key.balance + ' ฿'">Loading ...</span>
+          <br/>
+          <span ng-bind="money( key.balance * price.raw, 2, currency.symbol )" style="font-size:20px; color: #aaa">Loading ...</span>
         </center>
       </div>
       <table class="table">
@@ -27,7 +29,7 @@
   </div>
 
   <div class="col-md-4">
-  <div id="add_key" class="panel panel-default" style="padding: 33px; cursor: pointer; background-color:#5cb85c; border-color: #4cae4c; color:white">
+  <div id="add_key" class="panel panel-default" style="padding: 45px; cursor: pointer; background-color:#5cb85c; border-color: #4cae4c; color:white">
       <div class="panel-body" style="font-size:26px; text-align:center;">
         <center>
           <i class="fa fa-plus fa-2x"></i>

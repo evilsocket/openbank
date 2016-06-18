@@ -144,6 +144,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
 
   $scope.price = {
     current: 'Loading ...',
+    raw: 100.0,
     timestamp: '...'
   };
 
@@ -169,6 +170,8 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     value: ''
   }];
 
+  $scope.money = money;
+  
   $scope.updateBTC = function(data) {
     var balance  = data['status']['balance'];
 
@@ -192,6 +195,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     var price    = data['status']['price'];
     var currency = data['currency'];
 
+    $scope.price.raw       = price['value'];
     $scope.price.current   = money( price['value'], 2, currency['symbol'] );
     $scope.price.timestamp = $.timeago( new Date( price['ts'] * 1000 ) );
   };
