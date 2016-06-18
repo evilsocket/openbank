@@ -96,8 +96,7 @@ class MeController extends Controller
       if( isset($me['name']) ){
         $name = trim($me['name']);
         if( mb_strlen($name) > 255 || mb_strlen($name) < 1 ){
-          Log::error( 'Invalid name for user.' );
-          return $this->error( 'Invalid request.', 422 );
+          return $this->error( 'Invalid name specified.', 422 );
         }
 
         $this->user->name = $name;
@@ -111,8 +110,7 @@ class MeController extends Controller
       // Check all settings first.
       foreach( $settings as $key => $value ){
         if( \App\UserSetting::isValid($key, $value) == FALSE ){
-          Log::error( "Invalid setting name '$key'." );
-          return $this->error( 'Invalid request.', 422 );
+          return $this->error( "Invalid setting name '$key'.", 422 );
         }
       }
 
@@ -128,8 +126,7 @@ class MeController extends Controller
       foreach( $keys as $key ){
         $key = (array)$key;
         if( !\App\Key::validate($key) ){
-          Log::error( 'Invalid key label or value.' );
-          return $this->error( 'Invalid request.', 422 );
+          return $this->error( 'Invalid key label or value.', 422 );
         }
       }
 

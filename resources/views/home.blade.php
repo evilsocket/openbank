@@ -10,6 +10,7 @@
 @stop
 
 @include('home.keymodal')
+@include('home.errormodal')
 
 @section('content')
 <div class="container-fluid" ng-app="OpenBank" ng-controller="DashboardController">
