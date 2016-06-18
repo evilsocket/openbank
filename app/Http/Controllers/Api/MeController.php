@@ -31,7 +31,6 @@ class MeController extends Controller
     $now      = time();
     $currency = $this->user->getCurrency();
     $keys     = $this->user->getKeys();
-    $settings = $this->user->settings()->get();
     $price    = \App\Price::current( $currency->name );
     $trends   = \App\Price::trends( $price );
     $history  = \App\Price::history( $currency->name );
@@ -74,7 +73,6 @@ class MeController extends Controller
           'trends' => $trends
         ]
       ],
-      'settings' => $settings,
       'keys' => $keys,
       'history' => $history,
       'rates' => $rates
