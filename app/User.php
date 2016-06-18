@@ -83,6 +83,11 @@ class User extends Authenticatable
       return Cache::get($key);
     }
 
+    public function purgeCache() {
+      Cache::forget("user_".$this->id."#getKeys");
+      Cache::forget("user_".$this->id."#getCurrency");
+    }
+
     public function addKey( $label, $value ) {
       $record = Key::where( 'user_id', '=', $this->id )->where( 'value', '=', $value )->first();
       // Create new
