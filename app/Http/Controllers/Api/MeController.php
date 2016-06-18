@@ -28,6 +28,7 @@ class MeController extends Controller
   }
 
   public function getUserProfile(){
+    $now      = time();
     $currency = $this->user->getCurrency();
     $keys     = $this->user->getKeys();
     $settings = $this->user->settings()->get();
@@ -62,7 +63,7 @@ class MeController extends Controller
     $balance['fiat'] = $balance['btc'] * $price->price;
 
     $data = array(
-      'live' => true,
+      'ms' => time() - $now,
       'me' => $this->user,
       'currency' => $currency,
       'status' => [
