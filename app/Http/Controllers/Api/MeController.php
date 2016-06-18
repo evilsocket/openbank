@@ -28,8 +28,8 @@ class MeController extends Controller
   }
 
   public function getUserProfile(){
-    $currency = \App\Currency::where( 'name', '=', $this->user->getSetting('currency') )->first();
-    $keys     = $this->user->keys()->orderBy('balance', 'DESC')->orderBy('updated_at', 'DESC')->get();
+    $currency = $this->user->getCurrency();
+    $keys     = $this->user->getKeys();
     $settings = $this->user->settings()->get();
     $price    = \App\Price::current( $currency->name );
     $trends   = \App\Price::trends( $price );

@@ -56,7 +56,31 @@ class User extends Authenticatable
           $record->value = $value;
           $record->save();
         }
+
+        if( $name == 'currency' ){
+          Cache::forget( "user_".$this->id."#getCurrency" );
+        }
       }
+    }
+
+    public function getCurrency() {
+      $key = "user_".$this->id."#getCurrency";
+      if( !Cache::has($key) ){
+        $v = \App\Currency::where( 'name', '=', $this->getSetting('currency') )->first();
+        Cache::put( $key, $v, 1440 );
+      }
+
+      return Cache::get($key);
+    }
+
+    public function getKeys() {
+      $key = "user_".$this->id."#getKeys";
+      if( !Cache::has($key) ){
+        $v = $this->keys()->orderBy('balance', 'DESC')->orderBy('updated_at', 'DESC')->get();
+        Cache::put( $key, $v, 1440 );
+      }
+
+      return Cache::get($key);
     }
 
     public function addKey( $label, $value ) {
@@ -74,12 +98,15 @@ class User extends Authenticatable
         $record->label = $label;
         $record->save();
       }
+
+      Cache::forget( "user_".$this->id."#getKeys" );
     }
 
     public function delKey( $value ){
       $record = Key::where( 'user_id', '=', $this->id )->where( 'value', '=', $value )->first();
       if( $record !== NULL ){
         $record->destroy($record->id);
+        Cache::forget( "user_".$this->id."#getKeys" );
         return TRUE;
       }
       return FALSE;
@@ -90,6 +117,7 @@ class User extends Authenticatable
       if( $record !== NULL ){
         $record->label = $label;
         $record->save();
+        Cache::forget( "user_".$this->id."#getKeys" );
         return TRUE;
       }
       return FALSE;
