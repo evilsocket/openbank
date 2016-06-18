@@ -1,5 +1,5 @@
 <div class="row">
-  <div ng-repeat="key in keys" class="col-md-4">
+  <div ng-repeat="key in keys" class="col-md-2">
   <div class="panel panel-default key_edit" style="cursor: pointer;" data-label="<% key.label %>" data-key="<% key.value %>">
       <div class="panel-heading">
         <span ng-bind="key.label"></span>
@@ -9,18 +9,18 @@
           </a>
         </span>
       </div>
-      <div class="panel-body" style="font-size:30px;">
+      <div class="panel-body" style="font-size:25px;">
         <center>
           <span ng-bind="key.balance + ' ฿'">Loading ...</span>
           <br/>
-          <span ng-bind="money( key.balance * price.raw, 2, currency.symbol )" style="font-size:20px; color: #aaa">Loading ...</span>
+          <span ng-bind="money( key.balance * price.raw, 2, currency.symbol )" style="font-size:15px; color: #aaa">Loading ...</span>
         </center>
       </div>
       <table class="table">
         <tr>
           <td>
             <center>
-              <small style="color:#aaa">Last update <span ng-bind="key.updated_at"></span></small>
+              <small style="color:#aaa; font-size:10px;">Last update <span ng-bind="key.updated_at"></span></small>
             </center>
           </td>
         </tr>
@@ -28,7 +28,7 @@
   </div>
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-2">
   <div id="add_key" class="panel panel-default" style="padding: 45px; cursor: pointer; background-color:#5cb85c; border-color: #4cae4c; color:white">
       <div class="panel-body" style="font-size:26px; text-align:center;">
         <center>
