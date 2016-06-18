@@ -6,9 +6,7 @@ use Closure;
 
 class ApiValidatorMiddleware
 {
-  const PARSED_METHODS = [
-      'POST', 'PUT', 'PATCH'
-  ];
+  const PARSED_METHODS = 'POST,PUT,PATCH';
   /**
    * Handle an incoming request.
    *
@@ -18,7 +16,7 @@ class ApiValidatorMiddleware
    */
   public function handle($request, Closure $next)
   {
-    if (in_array($request->getMethod(), self::PARSED_METHODS)) {
+    if (in_array($request->getMethod(), explode(',',self::PARSED_METHODS))) {
         $request->merge((array)json_decode($request->getContent()));
     }
 
