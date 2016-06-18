@@ -5,8 +5,7 @@ use Log;
 use Cache;
 class UpdateBalance extends Command
 {
-    private function doGet( $user, $key ){
-      $api_key = $user->getSetting('blockonomics_api_key');
+    private function doGet( $user, $api_key, $key ){
       $opts = array('http' =>
           array(
               'method'  => 'GET',
@@ -20,6 +19,7 @@ class UpdateBalance extends Command
       $response = @json_decode($result, true);
       return $response;
     }
+
     private function doPost( $key ){
       $data = array('addr' => $key);
       $opts = array('http' =>
@@ -57,39 +57,48 @@ class UpdateBalance extends Command
       Log::info('Balance update job started ...');
       foreach( \App\User::all() as $user ){
         $keys = $user->keys()->get();
-        $api_key = $user->getSetting('blockonomics_api_key');
         // Skip users with no keys
         if( !$keys )
           continue;
-        if(strlen($api_key) > 0) {
-          $response = $this->doGet( $user, $key->value );
-        }
-        Log::info( "Updating balance for '".$user->email."' ( id = ".$user->id." ) ..." );
+
+        $api_key = $user->getSetting('blockonomics_api_key');
+
+        Log::info( "Updating balance for '".$user->email."' ( id = ".$user->id." blockonomics_api_key = '$api_key' ) ..." );
+
         foreach( $keys as $key ){
           Log::info( "  Fetching balance for key '".$key->label."' ( ".$key->value." ) ..." );
-          if(strlen($api_key) > 0) {
-           $total = 0;
-            if( !$response || !isset($response[0]['balance']) ){
-              Log::error( "! Invalid response json." );
-              continue;
-           }
-           foreach($response as $responseData) {
-             if($responseData['address'] == $key->value) {
-               $total = $responseData['balance'];
-             }
-           }
-          } else {
+
+          $total = 0;
+
+          // user has api key ?
+          if( $api_key ){
+            $response = $this->doGet( $user, $api_key, $key->value );
+
+            if( !$response || !is_array($response) || !isset($response[0]['balance']) ){
+               Log::error( "! Invalid response json." );
+               continue;
+            }
+
+            foreach($response as $responseData) {
+              if($responseData['address'] == $key->value) {
+                $total = $responseData['balance'];
+              }
+            }
+          }
+          // no api key
+          else {
             $response = $this->doPost( $key->value );
             if( !$response || !isset($response['response']) ){
               Log::error( "! Invalid response json." );
               continue;
-           }
+            }
+
             $response = $response['response'];
-            $total    = 0;
             foreach( $response as $address ){
               $total += $address['confirmed'];
             }
           }
+
           $total /= 100000000.0;
           $key->balance = $total;
           $key->updated_at = time();
