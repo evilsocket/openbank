@@ -49,19 +49,17 @@
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     @if (Auth::guest())
-                        <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
+                      <li><a href="/login">Login</a></li>
+                      <li><a href="/register">Register</a></li>
                     @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                              <li><a href="/settings"><i class="fa fa-btn fa-cog"></i>Settings</a></li>
-                                <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                            </ul>
-                        </li>
+                      <li><a href="/settings" style="padding-top: 20px;">
+                        <i class="fa fa-btn fa-lg fa-cog"></i></a>
+                      </li>
+                      <li>
+                        <a href="/logout" style="padding-top: 20px;">
+                          <i class="fa fa-btn fa-lg fa-sign-out"></i>
+                        </a>
+                      </li>
                     @endif
                 </ul>
             </div>
