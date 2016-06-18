@@ -1,5 +1,3 @@
-var chart_type = 0;
-
 function money( n, decimals, symbol ){
   var fn = parseFloat(n);
 
@@ -151,6 +149,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   };
 
   $scope.chart = {
+    type: 0,
     data:   [[]],
     labels: [],
     names: [
@@ -161,9 +160,8 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     ],
     name: '1 hour',
     setType: function(type) {
-      chart_type = type;
+      $scope.chart.type = type;
       $scope.chart.name = $scope.chart.names[type];
-      $scope.updateAll();
     }
   };
 
@@ -219,19 +217,19 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     $scope.chart.labels = $.map( data['history'], function(value, index){
       var date = new Date( value.ts * 1000 );
 
-      if( chart_type == 0 ){
+      if( $scope.chart.type == 0 ){
         var fmt = $filter('date')( date, 'HH:mm' );
         return ( index % 10 == 0 ? fmt : '' );
       }
-      else if( chart_type == 1 ){
+      else if( $scope.chart.type == 1 ){
         var fmt = $filter('date')( date, 'HH:mm' );
         return ( index % 2 == 0 ? fmt : '' );
       }
-      else if( chart_type == 2 ){
+      else if( $scope.chart.type == 2 ){
         var fmt = $filter('date')( date, 'EEEE' );
         return $filter('date')( date, 'EEEE' );
       }
-      else if( chart_type == 3 ){
+      else if( $scope.chart.type == 3 ){
         var fmt = $filter('date')( date, 'EEEE' );
         return $filter('date')( date, 'dd MMM' );
       }
@@ -246,7 +244,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   $scope.updateAll = function(){
     console.log( 'Updating dashboard ...' );
 
-    $.get( '/api/v1/me?r=' + new Date().getTime() + '&api_token=' + api_token + '&chart=' + chart_type, function(data){
+    $.get( '/api/v1/me?r=' + new Date().getTime() + '&api_token=' + api_token + '&chart=' + $scope.chart.type, function(data){
       $scope.updateBTC(data);
       $scope.updateBalance(data);
       $scope.updatePrice(data);
