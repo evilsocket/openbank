@@ -20,7 +20,7 @@ All data is updated in realtime using two different API, one job will get the cu
 
 **IMPORTANT NOTE ABOUT XPUB**
 
-If you're adding an **xPub** key with more than 50 addresses bound to it, you'll need to get an API key from blockonomics and put it in your settings panel.
+If you're adding an **xPub** key with more than 50 addresses bound to it, you'll need to get an API key from blockonomics and put it in your settings panel. Make sure you add **all** your addresses/keys to the wallet watcher service or else it will appear with 0 balance.
 
 ### Crontab
 
