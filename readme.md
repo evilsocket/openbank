@@ -55,6 +55,16 @@ To install the needed cronjob:
         include /etc/nginx/fastcgi_params;
       }
     }
+    
+### Installation
+
+1. Checkout this git repository to your server.
+2. Run `composer install`. For details about installing composer see [Getcomposer.org](https://getcomposer.org/).
+3. Copy `.env.example` to `.env` and edit to your needs. Atleast you need to specify database details.
+4. Make sure the `storage` directory is writable for your webserver.
+5. Run `php artisan key:generate`.
+6. Run `php artisan migrate`.
+7. Open Openbank in your browser, and enjoy.
 
 ### License
 
