@@ -11,6 +11,22 @@ class Price extends Model
     'currency', 'price', 'markets'
   ];
 
+  const CHART_TYPE_1H  = 0;
+  const CHART_TYPE_24H = 1;
+  const CHART_TYPE_1W  = 2;
+  const CHART_TYPE_1M  = 3;
+
+  public static function isValidChartType($type) {
+    return in_array( $type,
+      array(
+        self::CHART_TYPE_1H,
+        self::CHART_TYPE_24H,
+        self::CHART_TYPE_1W,
+        self::CHART_TYPE_1M
+      )
+    );
+  }
+
   public static function current( $currency = 'USD' ){
     $key = "Price::current($currency)";
     if( !Cache::has($key) ){
@@ -53,13 +69,15 @@ class Price extends Model
   }
 
   public static function history( $currency = 'EUR', $chart_type = 0 ){
-    $key = "Price::history($currency,$chart_type)";
+    $chart_type = self::isValidChartType( $chart_type ) ? (int)$chart_type : \App\Price::CHART_TYPE_1H;
+    $key        = "Price::history($currency,$chart_type)";
+
     if( !Cache::has($key) ){
 
       $configs = array(
-        1 => array( 'mod' => 30,   'limit' => 48 ), // 1 every half hour ( 30 minutes ), limit to 48 ( 24 hours )
-        2 => array( 'mod' => 1440, 'limit' => 7 ),  // 1 every day  ( 1440 minutes ), limit 7
-        3 => array( 'mod' => 1440, 'limit' => 30 )  // 1 every day, limit 30
+        self::CHART_TYPE_24H => array( 'mod' => 30,   'limit' => 48 ), // 1 every half hour ( 30 minutes ), limit to 48 ( 24 hours )
+        self::CHART_TYPE_1W  => array( 'mod' => 1440, 'limit' => 7 ),  // 1 every day  ( 1440 minutes ), limit 7
+        self::CHART_TYPE_1M  => array( 'mod' => 1440, 'limit' => 30 )  // 1 every day, limit 30
       );
 
       $limit = 60;
@@ -72,20 +90,16 @@ class Price extends Model
       " WHERE rownum %% %d = 0 ORDER BY id DESC LIMIT %d";
 
       switch( $chart_type ){
-        // 1 hour
-        case 0:
+        case self::CHART_TYPE_1H:
           $v = Price::where('currency', '=', $currency)
                         ->orderBy('id', 'DESC')
                         ->limit($limit)
                         ->get();
         break;
 
-        // 24 hours
-        case 1:
-        // 1 week
-        case 2:
-        // 1 month
-        case 3:
+        case self::CHART_TYPE_24H :
+        case self::CHART_TYPE_1W  :
+        case self::CHART_TYPE_1M  :
 
           $cfg   = $configs[$chart_type];
           $limit = $cfg['limit'];

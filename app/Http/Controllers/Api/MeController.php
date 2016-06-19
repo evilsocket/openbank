@@ -28,14 +28,14 @@ class MeController extends Controller
   }
 
   public function getUserProfile(){
+    $currency   = $this->user->getCurrency();
+    $keys       = $this->user->getKeys();
     $chart_type = Input::get( 'chart', 0 );
-    $chart_type = in_array( $chart_type, array( 0, 1, 2, 3 ) ) ? (int)$chart_type : 0;
-    $currency = $this->user->getCurrency();
-    $keys     = $this->user->getKeys();
-    $price    = \App\Price::current( $currency->name );
-    $trends   = \App\Price::trends( $price );
-    $history  = \App\Price::history( $currency->name, $chart_type );
-    $rates    = \App\Price::rates( $currency->name );
+    $chart_type = \App\Price::isValidChartType( $chart_type ) ? (int)$chart_type : \App\Price::CHART_TYPE_1H;
+    $price      = \App\Price::current( $currency->name );
+    $trends     = \App\Price::trends( $price );
+    $history    = \App\Price::history( $currency->name, $chart_type );
+    $rates      = \App\Price::rates( $currency->name );
 
     $balance = [
       'btc'  => 0.0,
