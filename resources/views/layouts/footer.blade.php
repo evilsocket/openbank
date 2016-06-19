@@ -1,7 +1,7 @@
 <div id="footer" style="color:#999">
     <center>
     <small>
-      <p>© 2016 - OpenBank is made with <span style="color:red">♥</span> by
+      <p>© 2016 - OpenBank was made with <span style="color:red">♥</span> by
         <a href="https://github.com/evilsocket" target="_blank" >Simone 'evilsocket' Margaritelli</a>
       </p>
     </small>
