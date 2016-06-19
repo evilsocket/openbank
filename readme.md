@@ -22,11 +22,42 @@ All data is updated in realtime using two different API, one job will get the cu
 
 If you're adding an **xPub** key with more than 50 addresses bound to it, you'll need to get an API key from blockonomics and put it in your settings panel. Make sure you add **all** your addresses/keys to the wallet watcher service or else it will appear with 0 balance.
 
-### Crontab
+### Installation
 
-To install the needed cronjob:
+##### 1. Checkout this git repository to your server.
+
+    git clone https://github.com/evilsocket/openbank.git
+
+##### 2. Install dependencies.
+
+For details about installing composer see [Getcomposer.org](https://getcomposer.org/).
+
+     cd openbank
+     composer install
+
+##### 3. Setup environment.
+
+Copy `.env.example` to `.env` and edit to your needs.
+
+##### 4. Fix permissions.
+
+Make sure the `storage` directory is writable for your web server.
+
+##### 5. Initialize database.
+
+	php artisan key:generate
+	php artisan migrate
+	php artisan db:seed --class=CurrenciesTableSeeder
+
+#####	6. Create the cronjob
+
+Install the needed cronjob:
 
     */1 * * * * /usr/bin/php /var/www/openbank/www/artisan schedule:run
+
+##### 7. Register.
+
+Open OpenBank in your browser, register your account and enjoy.
 
 ### Sample NGINX Configuration
 
@@ -55,19 +86,9 @@ To install the needed cronjob:
         include /etc/nginx/fastcgi_params;
       }
     }
-    
-### Installation
-
-1. Checkout this git repository to your server.
-2. Run `composer install`. For details about installing composer see [Getcomposer.org](https://getcomposer.org/).
-3. Copy `.env.example` to `.env` and edit to your needs. Atleast you need to specify database details.
-4. Make sure the `storage` directory is writable for your webserver.
-5. Run `php artisan key:generate`.
-6. Run `php artisan migrate`.
-7. Open Openbank in your browser, and enjoy.
 
 ### License
 
 This software is released under the GNU 3 license.  
 Copyleft of Simone 'evilsocket' Margaritelli  
-https://www.evilsocket.net    
+https://www.evilsocket.net
