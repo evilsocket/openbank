@@ -161,8 +161,9 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     name: '1 Hour',
     error: '',
     setType: function(type) {
-      $scope.chart.type = type;
-      $scope.chart.name = $scope.chart.names[type];
+      $scope.chart.error = '';
+      $scope.chart.type  = type;
+      $scope.chart.name  = $scope.chart.names[type];
     }
   };
 
