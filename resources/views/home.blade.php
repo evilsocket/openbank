@@ -45,15 +45,5 @@
       @include('home.keys')
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <center>
-        <small style="color: #ccc">
-          Response generated in <span ng-bind="ms"></span> ms.
-        </small>
-      </center>
-    </div>
-  </div>
 </div>
 @endsection

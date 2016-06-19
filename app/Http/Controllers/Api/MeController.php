@@ -28,7 +28,6 @@ class MeController extends Controller
   }
 
   public function getUserProfile(){
-    $now      = time();
     $chart_type = Input::get( 'chart', 0 );
     $chart_type = in_array( $chart_type, array( 0, 1, 2, 3 ) ) ? (int)$chart_type : 0;
     $currency = $this->user->getCurrency();
@@ -54,7 +53,6 @@ class MeController extends Controller
     $balance['fiat'] = $balance['btc'] * $price->price;
 
     $data = array(
-      'ms' => time() - $now,
       'me' => $this->user,
       'currency' => $currency,
       'status' => [

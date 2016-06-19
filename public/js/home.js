@@ -122,8 +122,6 @@ var app = angular.module('OpenBank', ['chart.js'], function($interpolateProvider
 });
 
 app.controller( 'DashboardController', function($scope, $sce, $filter) {
-  $scope.ms = 0;
-
   $scope.currency = { };
 
   $scope.btc = {
@@ -253,7 +251,6 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
       $scope.updateChart(data);
       $scope.updateRates(data);
 
-      $scope.ms       = data['ms'];
       $scope.keys     = data['keys'];
       $scope.currency = data['currency'];
 
