@@ -29,7 +29,7 @@
   </div>
 
   <div class="col-md-2">
-  <div id="add_key" class="panel panel-default" style="padding: 37px; cursor: pointer; background-color:#5cb85c; border-color: #4cae4c; color:white">
+  <div id="add_key" class="panel panel-default" style="padding: 37px; cursor: pointer; background-color:#c6c9ce; border-color: #b6b9be; color:white">
       <div class="panel-body" style="font-size:26px; text-align:center;">
         <center>
           <i class="fa fa-plus fa-2x"></i>
