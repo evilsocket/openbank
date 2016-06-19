@@ -66,7 +66,7 @@ class Price extends Model
         " SELECT prices.*, @row := @row + 1 AS rownum ".
           " FROM (".
              " SELECT @row :=0" .
-          " ) r, prices WHERE currency = 'EUR'" .
+          " ) r, prices WHERE currency = '".$currency."'" .
       " ) ranked ".
       " WHERE rownum %% %d = 0 ORDER BY id DESC LIMIT %d";
 
