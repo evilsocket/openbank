@@ -1,6 +1,6 @@
 <?php
 
-Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api']], function () {
+Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth', 'api']], function () {
   // /api/v1/me* higher level API
   Route::get(    '/me',                    'Api\MeController@getUserProfile');
   Route::put(    '/me',                    'Api\MeController@setUserProfile');
