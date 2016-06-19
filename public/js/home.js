@@ -151,9 +151,9 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     color: 'green',
     class: 'panel panel-success',
     trends: [
-      '...',
-      '...',
-      '...'
+      $sce.trustAsHtml( trend(0) ),
+      $sce.trustAsHtml( trend(0) ),
+      $sce.trustAsHtml( trend(0) )
     ]
   };
 
@@ -259,8 +259,6 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   };
 
   $scope.updateAll = function(){
-    console.log( 'Updating dashboard ...' );
-
     $.get( '/api/v1/me?r=' + new Date().getTime() + '&api_token=' + api_token + '&chart=' + $scope.chart.type, function(data){
       $scope.updateBTC(data);
       $scope.updateBalance(data);
