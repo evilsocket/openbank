@@ -153,12 +153,12 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     data:   [[]],
     labels: [],
     names: [
-      '1 hour',
-      '24 hours',
-      '1 week',
-      '1 month'
+      '1 Hour',
+      '24 Hours',
+      '1 Week',
+      '1 Month'
     ],
-    name: '1 hour',
+    name: '1 Hour',
     setType: function(type) {
       $scope.chart.type = type;
       $scope.chart.name = $scope.chart.names[type];
