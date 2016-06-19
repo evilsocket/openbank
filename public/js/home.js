@@ -13,18 +13,37 @@ function trend(v){
   }
 }
 
-function ajax( payload, onsuccess, path = '/api/v1/me', method = 'PUT' ){
+function saveKey( label, value, onsuccess ) {
+  var payload = {"keys":[{"label":label,"value":value}]};
+
   $.ajax({
-      type: method,
-      url: path + "?api_token=" + api_token,
+      type: 'PUT',
+      url: '/api/v1/me?api_token=' + api_token,
       data: JSON.stringify(payload),
       contentType: "application/json",
       dataType: 'json',
-
       success: onsuccess,
-
       error: function( xhr, status, error ) {
+        $('#errors').html('');
 
+        for( var i = 0; i < xhr.responseJSON.errors.length; i++ ){
+          var err = xhr.responseJSON.errors[i];
+          $('<li>' + err + '</li>').appendTo('#errors');
+        }
+
+        $('#errormodal').modal('show');
+      }
+  });
+}
+
+function deleteKey( key, onsuccess ) {
+  $.ajax({
+      type: 'DELETE',
+      url: '/api/v1/me/key/' + key + '?api_token=' + api_token,
+      contentType: "application/json",
+      dataType: 'json',
+      success: onsuccess,
+      error: function( xhr, status, error ) {
         $('#errors').html('');
 
         for( var i = 0; i < xhr.responseJSON.errors.length; i++ ){
@@ -58,7 +77,7 @@ function initialize() {
     var value   = $('#key_value').val();
     var payload = {"keys":[{"label":label,"value":value}]};
 
-    ajax( payload, function(data){
+    saveKey( label, value, function(data){
       $('#keymodal').modal('hide');
       update();
     });
@@ -80,11 +99,9 @@ function refreshKeysHandlers() {
     if( confirm("Are you sure you want to delete this key?" ) ){
       var key = $(this).attr('data-key');
 
-      ajax( '', function(data){
+      deleteKey( key, function(data){
         update();
-      },
-      '/api/v1/me/key/' + key,
-      'delete' );
+      })
     }
 
     return false;
