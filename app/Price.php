@@ -62,6 +62,7 @@ class Price extends Model
         3 => array( 'mod' => 1440, 'limit' => 30 )  // 1 every day, limit 30
       );
 
+      $limit = 60;
       $query = "SELECT * FROM (" .
         " SELECT prices.*, @row := @row + 1 AS rownum ".
           " FROM (".
@@ -75,7 +76,7 @@ class Price extends Model
         case 0:
           $v = Price::where('currency', '=', $currency)
                         ->orderBy('id', 'DESC')
-                        ->limit(60)
+                        ->limit($limit)
                         ->get();
         break;
 
@@ -87,13 +88,25 @@ class Price extends Model
         case 3:
 
           $cfg   = $configs[$chart_type];
+          $limit = $cfg['limit'];
           $query = sprintf( $query, $cfg['mod'], $cfg['limit'] );
           $v     = Price::hydrateRaw( \DB::raw($query) );
 
         break;
       }
 
-      Cache::put( $key, $v, 1 );
+      $npoints = count($v);
+      $history = array();
+
+      foreach( $v as $p ){
+        $history[] = array(
+          'price'    => $p->price,
+          'ts'       => $p->created_at->timestamp,
+          'complete' => $npoints == $limit
+        );
+      }
+
+      Cache::put( $key, $history, 1 );
     }
 
     return Cache::get($key);

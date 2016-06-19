@@ -37,16 +37,6 @@ class MeController extends Controller
     $trends   = \App\Price::trends( $price );
     $history  = \App\Price::history( $currency->name, $chart_type );
     $rates    = \App\Price::rates( $currency->name );
-    $tmp      = array();
-
-    foreach( $history as $p ){
-      $tmp[] = array(
-        'price' => $p->price,
-        'ts'    => $p->created_at->timestamp
-      );
-    }
-
-    $history = $tmp;
 
     $balance = [
       'btc'  => 0.0,

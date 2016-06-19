@@ -159,6 +159,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
       '1 Month'
     ],
     name: '1 Hour',
+    error: '',
     setType: function(type) {
       $scope.chart.type = type;
       $scope.chart.name = $scope.chart.names[type];
@@ -213,6 +214,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   };
 
   $scope.updateChart = function(data) {
+    $scope.chart.error  = data['history'][0]['complete'] ? '' : 'Not Enought Data';
     $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
     $scope.chart.labels = $.map( data['history'], function(value, index){
       var date = new Date( value.ts * 1000 );
@@ -233,7 +235,6 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
         var fmt = $filter('date')( date, 'EEEE' );
         return $filter('date')( date, 'dd MMM' );
       }
-
     }).reverse();
   };
 
