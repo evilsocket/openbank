@@ -214,7 +214,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
   };
 
   $scope.updateChart = function(data) {
-    $scope.chart.error  = data['history'][0]['complete'] ? '' : 'Not Enought Data';
+    $scope.chart.error  = data['history'][0]['complete'] ? '' : 'Not Enough Data';
     $scope.chart.data   = [ $.map( data['history'], function(value, index){ return value.price; }).reverse() ];
     $scope.chart.labels = $.map( data['history'], function(value, index){
       var date = new Date( value.ts * 1000 );
