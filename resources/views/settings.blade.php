@@ -29,6 +29,18 @@
                       @endforeach
 
                       <div class="form-group">
+                        <label for="api_key" class="col-md-4 control-label">
+                          OpenBank API Key
+                          <br/>
+                          <small style="color:#999; font-weight:normal">
+                            Your API key for this OpenBank instance.</small>
+                        </label>
+                        <div class="col-md-6">
+                          <input type="text" name="api_key" class="form-control" id="api_key" value="{{ $user->api_token }}"  disabled="disabled"/>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
                           <div class="col-md-6 col-md-offset-4">
                             <button id="save" class="btn btn-success">
                                 <i class="fa fa-btn fa-floppy-o"></i> Save
