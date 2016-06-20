@@ -14,21 +14,33 @@
     </div>
 
     <div class="collapse navbar-collapse" id="app-navbar-collapse">
-      <ul class="nav navbar-nav navbar-right">
         @if (Auth::guest())
-          <li><a href="/login">Login</a></li>
-          <li><a href="/register">Register</a></li>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+          </ul>
         @else
-          <li><a href="/settings" style="padding-top: 20px;">
-            <i class="fa fa-btn fa-lg fa-cog"></i></a>
-          </li>
-          <li>
-            <a href="/logout" style="padding-top: 20px;">
-              <i class="fa fa-btn fa-lg fa-sign-out"></i>
-            </a>
-          </li>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                {{ $user->name }} <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="/settings">
+                    <i class="fa fa-btn fa-lg fa-cog"></i> Settings
+                  </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                  <a href="/logout">
+                    <i class="fa fa-btn fa-lg fa-sign-out"></i> Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         @endif
-      </ul>
     </div>
   </div>
 </nav>
