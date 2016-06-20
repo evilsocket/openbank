@@ -94,6 +94,7 @@ class Price extends Model
 
       switch( $chart_type ){
         case self::CHART_TYPE_1H:
+
           $v = Price::where('currency', '=', $currency)
                         ->orderBy('id', 'DESC')
                         ->limit(60)
@@ -114,11 +115,17 @@ class Price extends Model
         case self::CHART_TYPE_1W  :
         case self::CHART_TYPE_1M  :
 
-          $cfg   = $configs[$chart_type];
-          $limit = $cfg['limit'];
-          $query = "SELECT DATE_FORMAT( created_at, '%s') AS cluster, ROUND( AVG(price), 2 ) as price FROM prices WHERE currency = '$currency' GROUP BY cluster ORDER BY id DESC LIMIT %d";
-          $query = sprintf( $query, $cfg['cluster'], $cfg['limit'] );
-          $v     = \DB::select( \DB::raw($query) );
+          $cfg     = $configs[$chart_type];
+          $cluster = $cfg['cluster'];
+          $limit   = $cfg['limit'];
+
+          $v = \DB::table('prices')
+                ->select( \DB::raw( "DATE_FORMAT( created_at, '$cluster' ) AS cluster, ROUND( AVG(price), 2 ) as price" ) )
+                ->where( 'currency', '=', $currency )
+                ->groupBy( 'cluster' )
+                ->orderBy( 'id', 'desc' )
+                ->limit( $limit )
+                ->get();
 
           $npoints = count($v);
           $history = array();
