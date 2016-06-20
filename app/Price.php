@@ -88,8 +88,8 @@ class Price extends Model
     if( !Cache::has($key) ){
       $configs = array(
         self::CHART_TYPE_24H => [ 'cluster' => '%d-%m-%Y %H:00', 'limit' => 24 ],
-        self::CHART_TYPE_1W  => [ 'cluster' => '%d-%m-%Y', 'limit' => 7 ],
-        self::CHART_TYPE_1M  => [ 'cluster' => '%d-%m-%Y', 'limit' => 30 ]
+        self::CHART_TYPE_1W  => [ 'cluster' => '%d-%m-%Y',       'limit' => 7 ],
+        self::CHART_TYPE_1M  => [ 'cluster' => '%d-%m-%Y',       'limit' => 30 ]
       );
 
       switch( $chart_type ){
