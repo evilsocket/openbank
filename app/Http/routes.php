@@ -15,5 +15,7 @@ Route::group( ['prefix' => 'api/v1', 'middleware' => ['auth:api']], function () 
 
 Route::auth();
 
-Route::get( '/',         [ 'middleware' => 'auth', 'uses' => 'HomeController@index' ] );
-Route::get( '/settings', [ 'middleware' => 'auth', 'uses' => 'HomeController@showSettings' ] );
+Route::get( '/',           [ 'middleware' => 'auth', 'uses' => 'HomeController@index' ] );
+Route::get( '/logs',       [ 'middleware' => 'auth', 'uses' => 'HomeController@showLogs' ] );
+Route::get( '/logs/clear', [ 'middleware' => 'auth', 'uses' => 'HomeController@clearLogs' ] );
+Route::get( '/settings',   [ 'middleware' => 'auth', 'uses' => 'HomeController@showSettings' ] );

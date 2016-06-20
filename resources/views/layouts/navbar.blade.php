@@ -31,6 +31,11 @@
                     <i class="fa fa-btn fa-lg fa-cog"></i> Settings
                   </a>
                 </li>
+                <li>
+                  <a href="/logs">
+                    <i class="fa fa-btn fa-lg fa-file-text-o"></i> Logs
+                  </a>
+                </li>
                 <li role="separator" class="divider"></li>
                 <li>
                   <a href="/logout">
