@@ -3,6 +3,7 @@
 @section('pagescript')
   <script type="text/javascript">
     var api_token = '{{ $user->api_token }}';
+    var init_chart_type = {{ $user->getSetting('chart_type') }};
   </script>
   <script src="/js/home.js?t=<?= time() ?>"></script>
   <script src="/js/jquery.timeago.js"></script>

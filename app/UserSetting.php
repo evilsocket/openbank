@@ -16,19 +16,24 @@ class UserSetting extends Model
 
   protected static $valid_names = [
     'currency',
+    'chart_type',
     'blockonomics_api_key'
   ];
 
   protected static $valid_values = [
-    'currency' => [
-      'EUR', 'USD'
+    'currency'   => ['EUR', 'USD'],
+    'chart_type' => [
+      Price::CHART_TYPE_1H,
+      Price::CHART_TYPE_24H,
+      Price::CHART_TYPE_1W,
+      Price::CHART_TYPE_1M
     ],
-
     'blockonomics_api_key' => [ ]
   ];
 
   protected static $defaults = [
     'currency'             => 'USD',
+    'chart_type'           => Price::CHART_TYPE_1H,
     'blockonomics_api_key' => ''
   ];
 
@@ -36,6 +41,9 @@ class UserSetting extends Model
     if( $name == 'blockonomics_api_key' ){
       return 'Blockonomics.com API Key<br/>'.
              '<small style="color:#999; font-weight:normal">Needed for xPubs with more than 50 addresses.</small>';
+    }
+    else if( $name == 'chart_type' ){
+      return 'Dashboard Chart Default Type';
     }
     else {
       return ucfirst($name);
@@ -46,6 +54,17 @@ class UserSetting extends Model
     if( $name == 'blockonomics_api_key' ){
       $value = $user->getSetting($name);
       $html = '<input type="text" class="form-control setting" id="'.$name.'" name="'.$name.'" value="'.$value.'">';
+    }
+    else if( $name == 'chart_type' ){
+      $current = $user->getSetting($name);
+      $html = '<select class="form-control setting" id="'.$name.'" name="'.$name.'">';
+
+      foreach( Price::$chart_type_labels as $type => $name ){
+        $selected = $current == $type ? ' selected' : '';
+        $html .= '<option value="'.$type.'"'.$selected.'>'.$name.'</option>';
+      }
+
+      $html .= '</select>';
     }
     else {
       $html = '<select class="form-control setting" id="'.$name.'" name="'.$name.'">';

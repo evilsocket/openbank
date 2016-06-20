@@ -16,15 +16,28 @@ class Price extends Model
   const CHART_TYPE_1W  = 2;
   const CHART_TYPE_1M  = 3;
 
-  public static function isValidChartType($type) {
-    return in_array( $type,
-      array(
-        self::CHART_TYPE_1H,
-        self::CHART_TYPE_24H,
-        self::CHART_TYPE_1W,
-        self::CHART_TYPE_1M
-      )
+  public static $chart_type_labels = [
+    self::CHART_TYPE_1H => 'Last Hour',
+    self::CHART_TYPE_24H => 'Last 23 Hours',
+    self::CHART_TYPE_1W => 'Last Week',
+    self::CHART_TYPE_1M => 'Last Month'
+  ];
+
+  public static function currecies() {
+    return array( 'EUR', 'USD' );
+  }
+
+  public static function chartTypes() {
+    return array(
+      self::CHART_TYPE_1H,
+      self::CHART_TYPE_24H,
+      self::CHART_TYPE_1W,
+      self::CHART_TYPE_1M
     );
+  }
+
+  public static function isValidChartType($type) {
+    return in_array( $type, self::chartTypes() );
   }
 
   public static function current( $currency = 'USD' ){

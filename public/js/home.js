@@ -182,6 +182,8 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     }
   };
 
+  $scope.chart.setType( init_chart_type );
+
   $scope.rates = {
     data:   [[1]],
     labels: ['Loading ...'],
