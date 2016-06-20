@@ -10,7 +10,7 @@
     <tr>
       <td>
         <center>
-          <small style="color:#aaa">Updated <span ng-bind="btc.timestamp"></span></small>
+          <small style="color:#aaa">Last transaction seen <span ng-bind="btc.timestamp"></span></small>
         </center>
       </td>
     </tr>
