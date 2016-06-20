@@ -30,8 +30,14 @@ class HomeController extends Controller
       $filename = realpath( storage_path().'/logs/laravel.log' );
       $logs     = array();
       $labels   = array(
+        'NOTICE' => 'default',
+        'DEBUG' => 'default',
         'INFO'  => 'info',
-        'ERROR' => 'danger'
+        'ALERT' => 'warning',
+        'WARNING' => 'warning',
+        'ERROR' => 'danger',
+        'CRITICAL' => 'danger',
+        'EMERGENCY' => 'danger'
       );
 
       if( file_exists($filename) ){
