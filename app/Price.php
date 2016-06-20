@@ -86,28 +86,28 @@ class Price extends Model
     $key        = "Price::history($currency,$chart_type)";
 
     if( !Cache::has($key) ){
-
       $configs = array(
-        self::CHART_TYPE_24H => array( 'mod' => 30,   'limit' => 48 ), // 1 every half hour ( 30 minutes ), limit to 48 ( 24 hours )
-        self::CHART_TYPE_1W  => array( 'mod' => 1440, 'limit' => 7 ),  // 1 every day  ( 1440 minutes ), limit 7
-        self::CHART_TYPE_1M  => array( 'mod' => 1440, 'limit' => 30 )  // 1 every day, limit 30
+        self::CHART_TYPE_24H => [ 'cluster' => '%d-%m-%Y %H:00', 'limit' => 24 ],
+        self::CHART_TYPE_1W  => [ 'cluster' => '%d-%m-%Y', 'limit' => 7 ],
+        self::CHART_TYPE_1M  => [ 'cluster' => '%d-%m-%Y', 'limit' => 30 ]
       );
-
-      $limit = 60;
-      $query = "SELECT * FROM (" .
-        " SELECT prices.*, @row := @row + 1 AS rownum ".
-          " FROM (".
-             " SELECT @row :=0" .
-          " ) r, prices WHERE currency = '".$currency."'" .
-      " ) ranked ".
-      " WHERE rownum %% %d = 0 ORDER BY id DESC LIMIT %d";
 
       switch( $chart_type ){
         case self::CHART_TYPE_1H:
           $v = Price::where('currency', '=', $currency)
                         ->orderBy('id', 'DESC')
-                        ->limit($limit)
+                        ->limit(60)
                         ->get();
+
+          $history = array();
+          foreach( $v as $p ){
+            $history[] = array(
+              'price'    => $p->price,
+              'ts'       => $p->created_at->timestamp,
+              'complete' => true
+            );
+          }
+
         break;
 
         case self::CHART_TYPE_24H :
@@ -116,21 +116,22 @@ class Price extends Model
 
           $cfg   = $configs[$chart_type];
           $limit = $cfg['limit'];
-          $query = sprintf( $query, $cfg['mod'], $cfg['limit'] );
-          $v     = Price::hydrateRaw( \DB::raw($query) );
+          $query = "SELECT DATE_FORMAT( created_at, '%s') AS cluster, ROUND( AVG(price), 2 ) as price FROM prices WHERE currency = '$currency' GROUP BY cluster ORDER BY id DESC LIMIT %d";
+          $query = sprintf( $query, $cfg['cluster'], $cfg['limit'] );
+          $v     = \DB::select( \DB::raw($query) );
+
+          $npoints = count($v);
+          $history = array();
+
+          foreach( $v as $p ){
+            $history[] = array(
+              'price'    => $p->price,
+              'ts'       => strtotime( $p->cluster ),
+              'complete' => $npoints == $limit
+            );
+          }
 
         break;
-      }
-
-      $npoints = count($v);
-      $history = array();
-
-      foreach( $v as $p ){
-        $history[] = array(
-          'price'    => $p->price,
-          'ts'       => $p->created_at->timestamp,
-          'complete' => $npoints == $limit
-        );
       }
 
       Cache::put( $key, $history, 1 );
