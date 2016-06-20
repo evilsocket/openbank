@@ -28,13 +28,11 @@ class UpdatePrice extends Command
      */
     public function handle()
     {
-      Log::info('Price update job started ...');
-
       $data = @file_get_contents('https://api.bitcoinaverage.com/all');
       $json = @json_decode( $data, true );
 
       if( !$data || !$json ){
-        Log::error( 'Error while contacting https://api.bitcoinaverage.com/all' );
+        Log::error( '[PRICE JOB] Error while contacting https://api.bitcoinaverage.com/all' );
         die;
       }
 
@@ -43,8 +41,6 @@ class UpdatePrice extends Command
         if( $curr != '' && $curr != 'ignored_exchanges' && $curr != 'timestamp' ){
           $price   = $json[$curr]['global_averages']['last'];
           $markets = json_encode( $json[$curr]['exchanges'], true );
-
-          // Log::info( "Saving '$curr' ( $price ) ..." );
 
           \App\Price::create(array(
             'currency'  => $curr,
@@ -60,8 +56,6 @@ class UpdatePrice extends Command
 
       $deleted = \App\Price::where('created_at','<',$formatted_date)->delete();
       if( $deleted > 0 )
-        Log::info( "Deleted $deleted old price records." );
-      else
-        Log::info( "Done." );
+        Log::info( "[PRICE JOB] Deleted $deleted old price records." );
     }
 }

@@ -57,7 +57,8 @@ class UpdateBalance extends Command
      */
     public function handle()
     {
-      Log::info('Balance update job started ...');
+      Log::info('[BALANCE JOB] Started ...');
+
       foreach( \App\User::all() as $user ){
         $keys = $user->keys()->get();
         // Skip users with no keys
@@ -66,14 +67,10 @@ class UpdateBalance extends Command
 
         $api_key = $user->getSetting('blockonomics_api_key');
 
-        Log::info( "Updating balance for '".$user->email."' ( id = ".$user->id." blockonomics_api_key = '$api_key' ) ..." );
-
         foreach( $keys as $key ){
-          Log::info( "  Fetching balance for key '".$key->label."' ( ".$key->value." ) ..." );
-
           $balance = Blockonomics::getKeyBalance( $key->value, $api_key );
           if( $balance === NULL ){
-            Log::error( "! Invalid response json." );
+            Log::error( "[BALANCE JOB] Invalid response json." );
             continue;
           }
 
@@ -83,6 +80,7 @@ class UpdateBalance extends Command
 
         $user->purgeCache();
       }
-      Log::info('Balance update job DONE.');
+
+      Log::info('[BALANCE JOB] Done.');
     }
 }
