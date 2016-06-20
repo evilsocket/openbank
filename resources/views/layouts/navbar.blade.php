@@ -27,6 +27,12 @@
               </a>
               <ul class="dropdown-menu">
                 <li>
+                  <a href="/">
+                    <i class="fa fa-btn fa-lg fa-tachometer"></i> Dashboard
+                  </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
                   <a href="/settings">
                     <i class="fa fa-btn fa-lg fa-cog"></i> Settings
                   </a>
