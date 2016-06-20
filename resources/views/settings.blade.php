@@ -17,16 +17,18 @@
               <div class="panel-body">
                   <form class="form-horizontal" role="form" method="POST" action="#">
 
-                      @foreach( \App\UserSetting::getValidNames() as $name )
+                      @foreach( \App\UserSetting::available() as $name => $descriptor )
 
                         <div class="form-group">
-                            <label for="{{ $name }}" class="col-md-4 control-label">{!! \App\UserSetting::getLabelFor( $name ) !!}</label>
+                            <label for="{{ $name }}" class="col-md-4 control-label">{!! $descriptor->label() !!}</label>
                             <div class="col-md-6">
-                              {!! \App\UserSetting::getHtmlFor( $user, $name ) !!}
+                              {!! $descriptor->html( $user ) !!}
                             </div>
                         </div>
 
                       @endforeach
+
+                      <hr/>
 
                       <div class="form-group">
                         <label for="api_key" class="col-md-4 control-label">
@@ -40,8 +42,10 @@
                         </div>
                       </div>
 
+                      <br/><br/>
+
                       <div class="form-group">
-                          <div class="col-md-6 col-md-offset-4">
+                          <div class="col-md-6 col-md-offset-9">
                             <button id="save" class="btn btn-success">
                                 <i class="fa fa-btn fa-floppy-o"></i> Save
                             </button>

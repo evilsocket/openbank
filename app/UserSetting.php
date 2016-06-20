@@ -4,6 +4,65 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+class UserSettingDescriptor {
+  protected $name;
+  protected $label;
+  protected $values = array();
+  protected $default = NULL;
+
+  public function __construct( $name, $label, $values, $default = NULL ) {
+    $this->name    = $name;
+    $this->label   = $label;
+    $this->values  = $values;
+    $this->default = $default;
+  }
+
+  private function hasLabels() {
+    $labels = array_keys($this->values);
+    return $labels && $labels[0] !== 0;
+  }
+
+  public function label() {
+    return $this->label;
+  }
+
+  public function html( $user ) {
+    $current = $user->getSetting($this->name);
+
+    if( is_array($this->values) ){
+      $html = '<select class="form-control setting" id="'.$this->name.'" name="'.$this->name.'">';
+
+      foreach( $this->values as $key => $value ){
+        $selected = $current == $value ? ' selected' : '';
+        $label    = $this->hasLabels() ? $key : $value;
+        $html .= '<option value="'.$value.'"'.$selected.'>'.$label.'</option>';
+      }
+
+      $html .= '</select>';
+    }
+    else {
+      $html = '<input type="text" class="form-control setting" id="'.$this->name.'" name="'.$this->name.'" value="'.$current.'">';
+    }
+
+    return $html;
+  }
+
+  public function def() {
+    return $this->default;
+  }
+
+  public function isValidValue( $value ) {
+    if( is_array($this->values) ){
+      return in_array( $value, $this->values );
+    }
+    else if( $this->values !== '' ){
+      return $value == $this->values;
+    }
+
+    return true;
+  }
+}
+
 class UserSetting extends Model
 {
   protected $fillable = [
@@ -14,97 +73,43 @@ class UserSetting extends Model
       'id', 'user_id'
   ];
 
-  protected static $valid_names = [
-    'currency',
-    'chart_type',
-    'blockonomics_api_key'
-  ];
+  protected static $registered = NULL;
 
-  protected static $valid_values = [
-    'currency'   => ['EUR', 'USD'],
-    'chart_type' => [
-      Price::CHART_TYPE_1H,
-      Price::CHART_TYPE_24H,
-      Price::CHART_TYPE_1W,
-      Price::CHART_TYPE_1M
-    ],
-    'blockonomics_api_key' => [ ]
-  ];
+  public static function available() {
+    if( self::$registered === NULL ){
+      self::$registered = [
+        'currency'              => new UserSettingDescriptor(
+          'currency',
+          'Currency',
+          Price::currecies(),
+          'USD'
+        ),
 
-  protected static $defaults = [
-    'currency'             => 'USD',
-    'chart_type'           => Price::CHART_TYPE_1H,
-    'blockonomics_api_key' => ''
-  ];
+        'chart_type'            => new UserSettingDescriptor(
+          'chart_type',
+          'Dashboard Chart Default Type',
+          Price::chartTypes(),
+          Price::CHART_TYPE_1H
+        ),
 
-  public static function getLabelFor( $name ){
-    if( $name == 'blockonomics_api_key' ){
-      return 'Blockonomics.com API Key<br/>'.
-             '<small style="color:#999; font-weight:normal">Needed for xPubs with more than 50 addresses.</small>';
-    }
-    else if( $name == 'chart_type' ){
-      return 'Dashboard Chart Default Type';
-    }
-    else {
-      return ucfirst($name);
-    }
-  }
-
-  public static function getHtmlFor( $user, $name ){
-    if( $name == 'blockonomics_api_key' ){
-      $value = $user->getSetting($name);
-      $html = '<input type="text" class="form-control setting" id="'.$name.'" name="'.$name.'" value="'.$value.'">';
-    }
-    else if( $name == 'chart_type' ){
-      $current = $user->getSetting($name);
-      $html = '<select class="form-control setting" id="'.$name.'" name="'.$name.'">';
-
-      foreach( Price::$chart_type_labels as $type => $name ){
-        $selected = $current == $type ? ' selected' : '';
-        $html .= '<option value="'.$type.'"'.$selected.'>'.$name.'</option>';
-      }
-
-      $html .= '</select>';
-    }
-    else {
-      $html = '<select class="form-control setting" id="'.$name.'" name="'.$name.'">';
-
-      foreach( self::$valid_values[$name] as $value ){
-        $selected = $user->getSetting($name) == $value ? ' selected' : '';
-        $html .= '<option value="'.$value.'"'.$selected.'>'.$value.'</option>';
-      }
-
-      $html .= '</select>';
+        'blockonomics_api_key' => new UserSettingDescriptor(
+          'blockonomics_api_key',
+          'Blockonomics.com API Key<br/><small style="color:#999; font-weight:normal">Needed for xPubs with more than 50 addresses.</small>',
+          ''
+        )
+      ];
     }
 
-    return $html;
-  }
-
-  public static function getValidNames() {
-    return self::$valid_names;
-  }
-
-  public static function getDefaults(){
-    return self::$defaults;
-  }
-
-  public static function getDefault( $name ){
-    if( isset(self::$defaults[$name]) ){
-      return self::$defaults[$name];
-    }
-    return NULL;
+    return self::$registered;
   }
 
   public static function isValid( $name, $value ){
-    if( isset(self::$valid_values[$name]) === false ){
-      echo "'$name' not found in valid_values:";
-      print_r( self::$valid_values );
-      return false;
+    $avail = self::available();
+    if( isset($avail[$name]) ){
+      return $avail[$name]->isValidValue($value);
     }
 
-    $check = self::$valid_values[$name];
-
-    return !$check || in_array( $value, $check );
+    return FALSE;
   }
 
   public function user(){

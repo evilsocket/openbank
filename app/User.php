@@ -26,8 +26,8 @@ class User extends Authenticatable
     ];
 
     public function createDefaultSettings() {
-      foreach( UserSetting::getDefaults() as $name => $value ){
-        $this->setSetting( $name, $value );
+      foreach( UserSetting::available() as $name => $descriptor ){
+        $this->setSetting( $name, $descriptor->def() );
       }
     }
 

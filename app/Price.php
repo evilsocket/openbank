@@ -18,7 +18,7 @@ class Price extends Model
 
   public static $chart_type_labels = [
     self::CHART_TYPE_1H => 'Last Hour',
-    self::CHART_TYPE_24H => 'Last 23 Hours',
+    self::CHART_TYPE_24H => 'Last 24 Hours',
     self::CHART_TYPE_1W => 'Last Week',
     self::CHART_TYPE_1M => 'Last Month'
   ];
@@ -29,10 +29,10 @@ class Price extends Model
 
   public static function chartTypes() {
     return array(
-      self::CHART_TYPE_1H,
-      self::CHART_TYPE_24H,
-      self::CHART_TYPE_1W,
-      self::CHART_TYPE_1M
+      'Last Hour'     => self::CHART_TYPE_1H,
+      'Last 24 Hours' => self::CHART_TYPE_24H,
+      'Last Week'     => self::CHART_TYPE_1W,
+      'Last Month'    => self::CHART_TYPE_1M
     );
   }
 
