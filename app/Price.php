@@ -50,30 +50,43 @@ class Price extends Model
     return Cache::get($key);
   }
 
-  private static function getDate($modifier) {
-    $date = new \DateTime;
-    $date->modify($modifier);
-    return $date->format('Y-m-d H:i:s');
+  private static function getAverage($currency, $cluster, $limit) {
+    $key = "Price::getAverage($currency,$cluster,$limit)";
+    if( !Cache::has($key) ){
+      $average = 0.0;
+      $rows = \DB::table('prices')
+                ->select( \DB::raw( "DATE_FORMAT( created_at, '$cluster' ) AS cluster, ROUND( AVG(price), 2 ) as price" ) )
+                ->where( 'currency', '=', $currency )
+                ->groupBy( 'cluster' )
+                ->orderBy( 'id', 'desc' )
+                ->limit( $limit )
+                ->get();
+
+      foreach( $rows as $row ){
+        $average += $row->price;
+      }
+
+      $average /= count($rows);
+
+      Cache::put( $key, $average, 60 );
+    }
+
+    return Cache::get($key);
   }
 
   public static function trends( $price ){
-    $key = "Price::trends('.$price->currency.')";
+    $key = "Price::trends('.$price->currency.').v2";
+
     if( !Cache::has($key) ){
-      $trends = [
-        '24h' => self::getDate('-24 hours'),
-        '1w'  => self::getDate('-7 days'),
-        '1m'  => self::getDate('-1 month')
-      ];
+      $avg24h = self::getAverage( $price->currency, '%d-%m-%Y %H:00', 24 );
+      $avg1w  = self::getAverage( $price->currency, '%d-%m-%Y', 7 );
+      $avg1m  = self::getAverage( $price->currency, '%d-%m-%Y', 30 );
 
-      $results = [];
-
-      foreach( $trends as $label => $date ) {
-        $prev = Price::where('currency', '=', $price->currency)
-                  ->where('updated_at', '<=', $date )
-                  ->orderBy('updated_at', 'DESC')->first();
-
-        $results[$label] = $prev === NULL ? 0.0 : ( ( $price->price - $prev->price ) / $prev->price ) * 100.0;
-      }
+      $results = array(
+        '24h' => ( ( $price->price - $avg24h ) / $avg24h ) * 100.0,
+        '1w'  => ( ( $price->price - $avg1w ) / $avg1w ) * 100.0,
+        '1m'  =>( ( $price->price - $avg24h ) / $avg1m ) * 100.0,
+      );
 
       Cache::put( $key, $results, 1 );
     }
