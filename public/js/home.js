@@ -214,10 +214,7 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     var balance  = data['status']['balance'];
     var trends   = data['status']['price']['trends'];
     var currency = data['currency'];
-    var positive = trends['1w'] >= 0;
 
-    $scope.balance.class   = positive ? 'panel panel-success' : 'panel panel-danger';
-    $scope.balance.color   = positive ? 'green' : 'red';
     $scope.balance.total   = money( balance['fiat'], 2, currency['symbol'] );
     $scope.balance.trends  = $.map( trends, function(value, index){ return $sce.trustAsHtml( trend(value) ); });
   };
