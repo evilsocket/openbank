@@ -16,6 +16,16 @@
 @section('content')
 <div class="container-fluid" ng-app="OpenBank" ng-controller="DashboardController">
 
+  <div class="row" ng-show="offline">
+    <div class="col-md-12">
+      <div class="alert alert-danger" role="alert">
+        <center>
+          <b>SYSTEM IS OFFLINE</b>
+        </center>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-md-4">
       @include('home.balance')
@@ -39,7 +49,6 @@
       @include('home.rates')
     </div>
   </div>
-
 
   <div class="row">
     <div class="col-md-12">

@@ -139,6 +139,8 @@ var app = angular.module('OpenBank', ['chart.js'], function($interpolateProvider
 });
 
 app.controller( 'DashboardController', function($scope, $sce, $filter) {
+  $scope.offline = false;
+
   $scope.currency = { };
 
   $scope.btc = {
@@ -259,6 +261,8 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
 
   $scope.updateAll = function(){
     $.get( '/api/v1/me?r=' + new Date().getTime() + '&api_token=' + api_token + '&chart=' + $scope.chart.type, function(data){
+      $scope.offline = false;
+
       $scope.updateBTC(data);
       $scope.updateBalance(data);
       $scope.updatePrice(data);
@@ -272,6 +276,10 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
 
       titleUpdate(data);
       refreshKeysHandlers();
+    })
+    .fail(function() {
+      $scope.offline = true;
+      $scope.$apply();
     });
   };
 
