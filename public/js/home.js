@@ -283,7 +283,8 @@ app.controller( 'DashboardController', function($scope, $sce, $filter) {
     });
   };
 
-  setInterval( $scope.updateAll, 1000 );
+  $scope.updateAll();
+  setInterval( $scope.updateAll, 10000 );
 });
 
 $(function(){
