@@ -39,7 +39,7 @@ class UpdatePrice extends Command
       $currencies = array_keys($json);
       foreach( $currencies as $curr ){
         if( $curr != '' && $curr != 'ignored_exchanges' && $curr != 'timestamp' ){
-          $price   = $json[$curr]['global_averages']['last'];
+          $price   = $json[$curr]['averages']['last'];
           $markets = json_encode( $json[$curr]['exchanges'], true );
 
           \App\Price::create(array(

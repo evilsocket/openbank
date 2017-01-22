@@ -87,6 +87,30 @@ Open OpenBank in your browser, register your account and enjoy.
       }
     }
 
+### Sample Apache .htaccess Configuration
+
+```
+RewriteEngine On
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+    RewriteCond %{THE_REQUEST} ^GET\ /public/ [NC]
+    RewriteRule ^public/(.*)$ $1 [L,R=301,NE]
+
+    RewriteRule ^(.*)$ public/$1 [L,NC]
+    #RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
+</IfModule>
+
+<Files  ~ "\.env$">
+	Order allow,deny
+	Deny from all
+</Files>
+```
+
 ### License
 
 This software is released under the GNU 3 license.  
