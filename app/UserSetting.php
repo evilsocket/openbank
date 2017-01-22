@@ -33,11 +33,14 @@ class UserSetting extends Model
           Price::CHART_TYPE_1H
         ),
 
+        /*
+        TODO rimuovere?
         'blockonomics_api_key' => new UserSettingDescriptor(
           'blockonomics_api_key',
           'Blockonomics.com API Key<br/><small style="color:#999; font-weight:normal">Needed for xPubs with more than 50 addresses.</small>',
           ''
         )
+        */
       ];
     }
 
