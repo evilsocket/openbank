@@ -36,6 +36,24 @@ class Blockonomics
   }
 };
 
+class Blockchain
+{
+  public static function getKeyBalance( $key, $api_key = NULL ){
+    $opts = array('http' =>
+        array(
+            'method'  => 'GET',
+            'header'  => "Content-Type: application/text\r\n" .
+                         "Accept: application/text\r\n"
+        )
+    );
+    $context  = @stream_context_create($opts);
+    $result   = file_get_contents('https://blockchain.info/q/addressbalance/'.$key, false, $context);
+    $balance  = (int)$result;
+
+    return $balance / 100000000.0;
+  }
+}
+
 class UpdateBalance extends Command
 {
     /**
@@ -65,10 +83,11 @@ class UpdateBalance extends Command
         if( !$keys )
           continue;
 
-        $api_key = $user->getSetting('blockonomics_api_key');
+        $api_key = null;
+        //$api_key = $user->getSetting('blockonomics_api_key');
 
         foreach( $keys as $key ){
-          $balance = Blockonomics::getKeyBalance( $key->value, $api_key );
+          $balance = Blockchain::getKeyBalance( $key->value, $api_key );
           if( $balance === NULL ){
             Log::error( "[BALANCE JOB] Invalid response json." );
             continue;

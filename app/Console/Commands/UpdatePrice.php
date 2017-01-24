@@ -28,6 +28,7 @@ class UpdatePrice extends Command
      */
     public function handle()
     {
+      Log::info( "[PRICE JOB] started.." );
       $data = @file_get_contents('https://api.bitcoinaverage.com/all');
       $json = @json_decode( $data, true );
 
