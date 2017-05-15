@@ -61,35 +61,37 @@ Open OpenBank in your browser, register your account and enjoy.
 
 ### Sample NGINX Configuration
 
-    server {
-      listen       80;
-      server_name  ~^(\w*)\.?openbank\.io$;
+```nginx
+server {
+  listen       80;
+  server_name  ~^(\w*)\.?openbank\.io$;
 
-      root /var/www/openbank.io/www/public;
-      access_log /var/www/openbank.io/access.log;
-      error_log /var/www/openbank.io/error.log;
+  root /var/www/openbank.io/www/public;
+  access_log /var/www/openbank.io/access.log;
+  error_log /var/www/openbank.io/error.log;
 
-      index index.php index.html index.htm;
+  index index.php index.html index.htm;
 
-      location / {
-        try_files $uri $uri/ /index.php$is_args$args;
-      }
+  location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+  }
 
 
-      location ~ \.php$
-      {
-        try_files $uri /index.php =404;
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param PATH_INFO $fastcgi_script_name;
-        include /etc/nginx/fastcgi_params;
-      }
-    }
+  location ~ \.php$
+  {
+    try_files $uri /index.php =404;
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_script_name;
+    include /etc/nginx/fastcgi_params;
+  }
+}
+```
 
 ### Sample Apache .htaccess Configuration
 
-```
+```apache
 RewriteEngine On
 
 <IfModule mod_rewrite.c>
