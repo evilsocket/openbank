@@ -19,7 +19,7 @@ class UpdatePrice extends Command
      *
      * @var string
      */
-    protected $description = 'Update the price from https://bitcoinaverage.com API.';
+    protected $description = 'Update the price from blockchain API.';
 
     /**
      * Execute the console command.
@@ -29,24 +29,27 @@ class UpdatePrice extends Command
     public function handle()
     {
       Log::info( "[PRICE JOB] started.." );
-      $data = @file_get_contents('https://api.bitcoinaverage.com/all');
+      //$data = @file_get_contents('https://api.bitcoinaverage.com/all');
+      $data = @file_get_contents('https://blockchain.info/ticker');
       $json = @json_decode( $data, true );
 
       if( !$data || !$json ){
-        Log::error( '[PRICE JOB] Error while contacting https://api.bitcoinaverage.com/all' );
+        Log::error( '[PRICE JOB] Error while contacting blockchain API' );
         die;
       }
 
       $currencies = array_keys($json);
       foreach( $currencies as $curr ){
         if( $curr != '' && $curr != 'ignored_exchanges' && $curr != 'timestamp' ){
-          $price   = $json[$curr]['averages']['last'];
-          $markets = json_encode( $json[$curr]['exchanges'], true );
+          $price   = $json[$curr]['last'];
+          $markets = 'BlockChain'; //json_encode( $json[$curr]['exchanges'], true );
 
           \App\Price::create(array(
             'currency'  => $curr,
             'price'     => $price,
-            'markets'   => $markets
+            'markets'   => json_encode([
+		'blockchain' => [ 'display_name' => 'blockchain', 'rates' => [ 'bid' => $json[$curr]['buy'], 'ask' => $json[$curr]['sell'] ] ]
+            ])
           ));
         }
       }
