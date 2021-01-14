@@ -16,7 +16,7 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "6.18.34"
+        "laravel/framework": "6.18.43"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
